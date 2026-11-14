@@ -1,0 +1,35 @@
+import React from 'react'
+import { supabaseAdmin } from '@/lib/supabase/admin'
+import { TicketsTable } from '@/components/tickets/tickets-table'
+import { Database } from '@/types/database.types'
+import { LifeBuoy } from 'lucide-react'
+
+type TicketRow = Database['public']['Tables']['support_tickets']['Row']
+
+export const dynamic = 'force-dynamic'
+
+export default async function TicketsPage() {
+  const { data: rawTickets } = await supabaseAdmin
+    .from('support_tickets')
+    .select('*')
+    .order('created_at', { ascending: false })
+
+  const tickets = (rawTickets || []) as TicketRow[]
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div>
+        <h1 className="text-2xl font-black text-white tracking-tight flex items-center gap-2.5">
+          <LifeBuoy className="w-6 h-6 text-[#5B6FD0]" />
+          <span>Support Ticket Operations</span>
+        </h1>
+        <p className="text-xs text-slate-400 mt-1">
+          Review user inquiries, prioritize resolution queues, append internal investigation notes, and manage SLAs.
+        </p>
+      </div>
+
+      <TicketsTable tickets={tickets} />
+    </div>
+  )
+}
