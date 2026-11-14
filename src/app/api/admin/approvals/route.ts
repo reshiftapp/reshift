@@ -151,6 +151,25 @@ export async function POST(request: Request) {
         success: true,
         message: `Application rejected. Notice sent to ${userEmail}.`,
       })
+    } else if (action === 'delete') {
+      // Permanent Protection: Target cannot be Super Admin
+      if (user.email === 'reshiftapp@gmail.com' || currentMeta.role === 'super_admin') {
+        return NextResponse.json({ success: false, message: 'Super Admin root account cannot be deleted.' }, { status: 403 })
+      }
+
+      // Delete from public.profiles if exists
+      await supabaseAdmin.from('profiles').delete().eq('id', userId)
+
+      // Permanently delete user from Supabase Auth
+      const { error: deleteErr } = await supabaseAdmin.auth.admin.deleteUser(userId)
+      if (deleteErr) {
+        return NextResponse.json({ success: false, message: deleteErr.message }, { status: 500 })
+      }
+
+      return NextResponse.json({
+        success: true,
+        message: `Account ${userName} (${userEmail}) has been permanently deleted from database.`,
+      })
     }
 
     return NextResponse.json({ success: false, message: 'Invalid action.' }, { status: 400 })

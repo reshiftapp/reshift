@@ -23,6 +23,7 @@ import {
   ExternalLink,
   ChevronRight,
   Sparkles,
+  Trash2,
 } from 'lucide-react'
 
 interface Application {
@@ -72,7 +73,7 @@ export default function ApprovalsPage() {
       role,
       reason,
     }: {
-      action: 'approve' | 'reject'
+      action: 'approve' | 'reject' | 'delete'
       userId: string
       role?: string
       reason?: string
@@ -356,16 +357,30 @@ export default function ApprovalsPage() {
                     <span>Revoke Access</span>
                   </button>
                 ) : (
-                  <button
-                    onClick={() => {
-                      setApproveModalApp(app)
-                      setAssignedRole('moderator')
-                    }}
-                    className="w-full py-1.5 px-3 bg-zinc-100 hover:bg-emerald-50 dark:bg-zinc-800 dark:hover:bg-emerald-950/40 text-zinc-600 hover:text-emerald-600 dark:text-zinc-400 dark:hover:text-emerald-400 text-xs rounded-lg border border-zinc-200 dark:border-zinc-700/60 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
-                  >
-                    <UserCheck className="w-3.5 h-3.5" />
-                    <span>Re-evaluate & Approve</span>
-                  </button>
+                  <div className="flex items-center gap-2 w-full">
+                    <button
+                      onClick={() => {
+                        setApproveModalApp(app)
+                        setAssignedRole('moderator')
+                      }}
+                      className="flex-1 py-1.5 px-3 bg-zinc-100 hover:bg-emerald-50 dark:bg-zinc-800 dark:hover:bg-emerald-950/40 text-zinc-600 hover:text-emerald-600 dark:text-zinc-400 dark:hover:text-emerald-400 text-xs rounded-lg border border-zinc-200 dark:border-zinc-700/60 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      <UserCheck className="w-3.5 h-3.5" />
+                      <span>Re-evaluate</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (confirm(`Permanently delete applicant account ${app.fullName} (${app.email}) from database?`)) {
+                          actionMutation.mutate({ action: 'delete', userId: app.id })
+                        }
+                      }}
+                      disabled={actionMutation.isPending}
+                      className="p-1.5 rounded-lg text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 border border-zinc-200 dark:border-zinc-700/60 transition-colors cursor-pointer"
+                      title="Permanently delete account from database"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 )}
               </div>
             </div>

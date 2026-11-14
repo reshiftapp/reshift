@@ -12,6 +12,7 @@ import {
   toggleRelocationStep,
   deletePostByModerator,
   deleteReplyByModerator,
+  deleteUserAccountPermanently,
 } from '@/app/users/actions'
 import {
   ArrowLeft,
@@ -31,6 +32,7 @@ import {
   Mail,
   User,
   AlertCircle,
+  AlertTriangle,
   Lock
 } from 'lucide-react'
 
@@ -62,11 +64,25 @@ export function UserDetailView({
   const [isPending, startTransition] = useTransition()
   const [activeTab, setActiveTab] = useState<'overview' | 'checklist' | 'posts' | 'tickets'>('overview')
   const [suspensionModalOpen, setSuspensionModalOpen] = useState(false)
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const [suspensionReason, setSuspensionReason] = useState(user.suspension_reason || '')
   const [feedback, setFeedback] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
 
   // Fast lookup of completed steps
   const completedMap = new Set(userSteps.filter((s) => s.is_completed).map((s) => s.step_id))
+
+  const handlePermanentDelete = () => {
+    startTransition(async () => {
+      const res = await deleteUserAccountPermanently(user.id)
+      if (res.success) {
+        router.push('/users')
+        router.refresh()
+      } else {
+        setFeedback({ message: res.error || 'Failed to delete user account.', type: 'error' })
+        setDeleteModalOpen(false)
+      }
+    })
+  }
 
   const handleToggleSuspension = async (suspend: boolean) => {
     startTransition(async () => {
@@ -266,6 +282,17 @@ export function UserDetailView({
                   <option value="content_editor">Content Editor</option>
                   <option value="moderator">Moderator</option>
                 </select>
+
+                {/* Permanent Deletion Button for Super Admin */}
+                <button
+                  onClick={() => setDeleteModalOpen(true)}
+                  disabled={isPending}
+                  className="px-3 py-1.5 rounded-lg text-xs font-medium bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-400 border border-rose-200/80 dark:border-rose-900/60 transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer"
+                  title="Permanently remove account and data from database"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Delete Account</span>
+                </button>
               </>
             )}
           </div>
@@ -486,6 +513,41 @@ export function UserDetailView({
                 className="px-4 py-2 rounded-xl text-xs font-semibold bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white"
               >
                 Confirm Suspension
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Permanent Account Deletion Modal */}
+      {deleteModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+          <div className="w-full max-w-md bg-white dark:bg-[#111113] border border-zinc-200 dark:border-white/10 rounded-2xl p-6 shadow-xl space-y-4">
+            <div className="flex items-center gap-3 text-rose-600 dark:text-rose-400">
+              <AlertTriangle className="w-6 h-6" />
+              <h3 className="text-base font-bold text-zinc-900 dark:text-white">Permanently Delete Account</h3>
+            </div>
+            <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+              Are you sure you want to permanently delete <strong className="text-zinc-900 dark:text-white">{user.full_name || user.email}</strong>?
+              This will permanently purge this account from Supabase Authentication (<code className="font-mono text-[11px] px-1 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800">auth.users</code>), customer profiles (<code className="font-mono text-[11px] px-1 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800">public.profiles</code>), and remove all associated user data.
+            </p>
+            <div className="p-3 bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/40 rounded-xl text-[11px] text-rose-800 dark:text-rose-300 font-medium">
+              ⚠️ This action is permanent and cannot be undone.
+            </div>
+            <div className="flex items-center justify-end gap-2.5 pt-2">
+              <button
+                onClick={() => setDeleteModalOpen(false)}
+                disabled={isPending}
+                className="px-4 py-2 rounded-xl text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handlePermanentDelete}
+                disabled={isPending}
+                className="px-4 py-2 rounded-xl text-xs font-semibold bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white cursor-pointer shadow-2xs"
+              >
+                {isPending ? 'Deleting from Database...' : 'Delete Account Permanently'}
               </button>
             </div>
           </div>

@@ -2,6 +2,65 @@
 
 import { revalidatePath } from 'next/cache'
 import { supabaseAdmin } from '@/lib/supabase/admin'
+import { createClient } from '@/lib/supabase/server'
+
+export async function deleteUserAccountPermanently(userId: string) {
+  try {
+    // 1. Verify caller is Super Admin
+    const supabase = await createClient()
+    const {
+      data: { user: caller },
+    } = await supabase.auth.getUser()
+
+    if (!caller) {
+      return { success: false, error: 'Unauthorized. Login required.' }
+    }
+
+    const callerMeta = caller.user_metadata || {}
+    const isSuperAdmin = caller.email === 'reshiftapp@gmail.com' || callerMeta.role === 'super_admin'
+
+    if (!isSuperAdmin) {
+      return { success: false, error: 'Forbidden. Only the Super Admin has authority to permanently delete accounts.' }
+    }
+
+    // 2. Permanent Protection: Target cannot be the Super Admin
+    const { data: targetRecord } = await supabaseAdmin.auth.admin.getUserById(userId)
+    const targetUser = targetRecord?.user
+    const targetMeta = targetUser?.user_metadata || {}
+
+    if (
+      targetUser?.email === 'reshiftapp@gmail.com' ||
+      targetMeta.role === 'super_admin'
+    ) {
+      return { success: false, error: 'The Super Admin root account is permanent and cannot be deleted.' }
+    }
+
+    // 3. Delete dependent records across database tables
+    await supabaseAdmin.from('user_relocation_steps').delete().eq('user_id', userId)
+    await (supabaseAdmin.from as any)('saved_properties').delete().eq('user_id', userId)
+    await (supabaseAdmin.from as any)('community_post_likes').delete().eq('user_id', userId)
+    await (supabaseAdmin.from as any)('community_comments').delete().eq('author_id', userId)
+    await supabaseAdmin.from('community_replies').delete().eq('author_id', userId)
+    await supabaseAdmin.from('community_posts').delete().eq('author_id', userId)
+    await supabaseAdmin.from('support_tickets').delete().eq('user_id', userId)
+    await supabaseAdmin.from('profiles').delete().eq('id', userId)
+
+    // 4. Permanently delete from Supabase Auth
+    const { error: deleteAuthErr } = await supabaseAdmin.auth.admin.deleteUser(userId)
+    if (deleteAuthErr) {
+      console.error('Error deleting auth user:', deleteAuthErr)
+      return { success: false, error: deleteAuthErr.message }
+    }
+
+    revalidatePath('/users')
+    revalidatePath('/approvals')
+    revalidatePath('/')
+    return { success: true }
+  } catch (error: any) {
+    console.error('deleteUserAccountPermanently error:', error)
+    return { success: false, error: error.message || 'Failed to delete user account.' }
+  }
+}
 
 export async function updateUserSuspension(userId: string, isSuspended: boolean, reason?: string) {
   try {
