@@ -107,12 +107,33 @@ function LoginForm() {
             console.error('Session trust check error:', err)
           }
         } else {
-          // Staff volunteer
-          setActiveUser({
-            email: user.email || '',
-            isSuperAdmin: false,
-            isTrusted: true,
-          })
+          // Staff volunteer: Verify approval status before treating session as active
+          const isStaff = meta.is_staff === true || Boolean(meta.id_card_url) || Boolean(meta.idCardUrl)
+          const approvalStatus = meta.approval_status || 'pending'
+
+          if (!isStaff) {
+            await supabase.auth.signOut().catch(() => {})
+            fetch('/api/auth/signout', { method: 'POST', headers: { 'Content-Type': 'application/json' } }).catch(() => {})
+            setErrorMsg('Access denied. This portal is strictly for authorized ReShift staff and administrators.')
+          } else if (approvalStatus === 'pending') {
+            await supabase.auth.signOut().catch(() => {})
+            fetch('/api/auth/signout', { method: 'POST', headers: { 'Content-Type': 'application/json' } }).catch(() => {})
+            setErrorMsg(null)
+            setPendingNotice(
+              'Your registration application is currently pending review by the Super Admin. You will receive an email once your company ID card has been verified and your operational role is assigned.'
+            )
+          } else if (approvalStatus === 'rejected') {
+            await supabase.auth.signOut().catch(() => {})
+            fetch('/api/auth/signout', { method: 'POST', headers: { 'Content-Type': 'application/json' } }).catch(() => {})
+            setErrorMsg(`Your application was not approved. Reason: ${meta.rejection_reason || 'Verification requirements not met.'}`)
+          } else {
+            // Approved staff volunteer
+            setActiveUser({
+              email: user.email || '',
+              isSuperAdmin: false,
+              isTrusted: true,
+            })
+          }
         }
       } else if (stepParam === '2fa') {
         setEmail('reshiftapp@gmail.com')
@@ -175,8 +196,8 @@ function LoginForm() {
 
         if (!isStaff) {
           // Mobile app customer, NOT staff
-          await supabase.auth.signOut()
-          await fetch('/api/auth/signout', { method: 'POST' })
+          await supabase.auth.signOut().catch(() => {})
+          fetch('/api/auth/signout', { method: 'POST', headers: { 'Content-Type': 'application/json' } }).catch(() => {})
           setErrorMsg(
             'Access denied. This portal is strictly for authorized ReShift staff and administrators. Customers must use the ReShift mobile application.'
           )
@@ -187,18 +208,19 @@ function LoginForm() {
         const approvalStatus = meta.approval_status || 'pending'
 
         if (approvalStatus === 'pending') {
-          await supabase.auth.signOut()
-          await fetch('/api/auth/signout', { method: 'POST' })
+          await supabase.auth.signOut().catch(() => {})
+          fetch('/api/auth/signout', { method: 'POST', headers: { 'Content-Type': 'application/json' } }).catch(() => {})
+          setErrorMsg(null)
           setPendingNotice(
-            'Your registration application is currently pending review by the Super Admin. You will receive an email once your company ID card has been verified.'
+            'Your registration application is currently pending review by the Super Admin. You will receive an email once your company ID card has been verified and your operational role is assigned.'
           )
           setLoading(false)
           return
         }
 
         if (approvalStatus === 'rejected') {
-          await supabase.auth.signOut()
-          await fetch('/api/auth/signout', { method: 'POST' })
+          await supabase.auth.signOut().catch(() => {})
+          fetch('/api/auth/signout', { method: 'POST', headers: { 'Content-Type': 'application/json' } }).catch(() => {})
           setErrorMsg(
             `Your application was not approved. Reason: ${meta.rejection_reason || 'Verification requirements not met.'}`
           )

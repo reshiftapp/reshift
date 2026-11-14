@@ -93,15 +93,13 @@ export async function middleware(request: NextRequest) {
 
   // If user is neither Super Admin nor approved staff (e.g. mobile app customer or pending volunteer)
   if (!isSuperAdmin && !isApprovedStaff) {
-    if (meta.approval_status === 'pending') {
-      const loginUrl = new URL('/login', request.url)
-      loginUrl.searchParams.set('error', 'pending')
-      return NextResponse.redirect(loginUrl)
-    }
-
     if (!isPublicPage) {
       const loginUrl = new URL('/login', request.url)
-      loginUrl.searchParams.set('error', 'unauthorized')
+      if (meta.approval_status === 'pending') {
+        loginUrl.searchParams.set('error', 'pending')
+      } else {
+        loginUrl.searchParams.set('error', 'unauthorized')
+      }
       return NextResponse.redirect(loginUrl)
     }
   }

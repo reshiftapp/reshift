@@ -52,6 +52,11 @@ export async function POST(request: Request) {
       }
     })
 
+    // If POST request, always return JSON
+    if (request.method === 'POST') {
+      return NextResponse.json({ success: true, message: 'Signed out successfully' })
+    }
+
     const accept = request.headers.get('accept') || ''
     if (accept.includes('application/json')) {
       return NextResponse.json({ success: true, message: 'Signed out successfully' })
