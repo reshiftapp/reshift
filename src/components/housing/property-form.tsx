@@ -126,20 +126,20 @@ export function PropertyForm({ initialData }: PropertyFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-4xl">
       {/* Top Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+      <div className="flex items-center justify-between pb-4 border-b border-zinc-200 dark:border-zinc-800">
         <div className="flex items-center gap-3">
           <Link
             href="/housing"
-            className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition-colors"
+            className="p-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div>
-            <h1 className="text-xl font-bold text-white tracking-tight">
+            <h1 className="text-xl font-bold text-zinc-900 dark:text-white tracking-tight">
               {initialData ? `Edit Property: ${initialData.name}` : 'List New Property / PG'}
             </h1>
-            <p className="text-xs text-slate-400">
-              Live updates directly sync to the Reshift mobile app find home catalog.
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+              Live updates directly sync to the ReShift mobile app find home catalog.
             </p>
           </div>
         </div>
@@ -147,7 +147,7 @@ export function PropertyForm({ initialData }: PropertyFormProps) {
         <button
           type="submit"
           disabled={isPending}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold bg-[#5B6FD0] hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/30 transition-all disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold bg-zinc-900 hover:bg-zinc-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 text-white shadow-2xs transition-all disabled:opacity-50 cursor-pointer"
         >
           <Save className="w-4 h-4" />
           <span>{isPending ? 'Saving to Database...' : initialData ? 'Update Property' : 'Publish Property'}</span>
@@ -155,7 +155,7 @@ export function PropertyForm({ initialData }: PropertyFormProps) {
       </div>
 
       {error && (
-        <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs">
+        <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/40 text-rose-800 dark:text-rose-300 text-xs">
           {error}
         </div>
       )}
@@ -163,28 +163,28 @@ export function PropertyForm({ initialData }: PropertyFormProps) {
       {/* Form Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Left Column: Core Details */}
-        <div className="space-y-4 rounded-2xl bg-slate-900/90 border border-slate-800 p-6 shadow-xl shadow-black/20">
-          <h3 className="text-sm font-bold text-white mb-2">Basic Information</h3>
+        <div className="space-y-4 rounded-2xl bg-white dark:bg-[#111113] border border-zinc-200 dark:border-white/10 p-6 shadow-2xs">
+          <h3 className="text-sm font-bold text-zinc-900 dark:text-white mb-2">Basic Information</h3>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-slate-300">Property Name *</label>
+            <label className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">Property Name *</label>
             <input
               type="text"
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Grace Luxury PG for Women"
-              className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-[#5B6FD0]"
+              className="w-full px-3.5 py-2 bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-300">City</label>
+              <label className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">City</label>
               <select
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
-                className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 focus:outline-none focus:border-[#5B6FD0]"
+                className="w-full px-3.5 py-2 bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
               >
                 {cities.filter((c) => c.name !== 'All').map((c) => (
                   <option key={c.name} value={c.name}>
@@ -195,11 +195,11 @@ export function PropertyForm({ initialData }: PropertyFormProps) {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-300">Tenant Target</label>
+              <label className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">Tenant Target</label>
               <select
                 value={forWhom}
                 onChange={(e) => setForWhom(e.target.value)}
-                className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 focus:outline-none focus:border-[#5B6FD0]"
+                className="w-full px-3.5 py-2 bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
               >
                 <option value="Girls">Girls Only</option>
                 <option value="Boys">Boys Only</option>
@@ -209,28 +209,28 @@ export function PropertyForm({ initialData }: PropertyFormProps) {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-slate-300">Neighbourhood / Location</label>
+            <label className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">Neighbourhood / Location</label>
             <input
               type="text"
               required
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               placeholder="e.g. Edappally, near Metro Station"
-              className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-[#5B6FD0]"
+              className="w-full px-3.5 py-2 bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-semibold text-slate-300">Monthly Rent (₹)</label>
+                <label className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">Monthly Rent (₹)</label>
                 {isSuperAdmin ? (
-                  <span className="text-[10px] text-amber-400 font-bold px-1.5 py-0.5 rounded bg-amber-500/10 border border-amber-500/20">
+                  <span className="text-[10px] text-amber-700 dark:text-amber-400 font-bold px-1.5 py-0.5 rounded bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/50">
                     👑 Set by Super Admin
                   </span>
                 ) : (
-                  <span className="text-[10px] text-slate-500 font-medium flex items-center gap-1">
-                    <Lock className="w-3 h-3 text-amber-400" /> Super Admin Only
+                  <span className="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium flex items-center gap-1">
+                    <Lock className="w-3 h-3 text-amber-500" /> Super Admin Only
                   </span>
                 )}
               </div>
@@ -243,7 +243,7 @@ export function PropertyForm({ initialData }: PropertyFormProps) {
                   value={monthlyRent}
                   onChange={(e) => setMonthlyRent(Number(e.target.value))}
                   placeholder="e.g. 7500"
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-[#5B6FD0]"
+                  className="w-full px-3.5 py-2 bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm text-zinc-900 dark:text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
                 />
               ) : (
                 <div className="space-y-1">
@@ -251,9 +251,9 @@ export function PropertyForm({ initialData }: PropertyFormProps) {
                     type="text"
                     disabled
                     value={initialData?.monthly_rent ? `₹${initialData.monthly_rent} / month` : 'Pending Super Admin Review'}
-                    className="w-full px-3.5 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-400 cursor-not-allowed select-none"
+                    className="w-full px-3.5 py-2 bg-zinc-100 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs text-zinc-500 dark:text-zinc-400 cursor-not-allowed select-none"
                   />
-                  <p className="text-[10px] text-amber-300/80">
+                  <p className="text-[10px] text-amber-600 dark:text-amber-400">
                     Staff listing: You can submit the property details. Official rent price is reviewed and assigned by Super Admin.
                   </p>
                 </div>
@@ -261,25 +261,25 @@ export function PropertyForm({ initialData }: PropertyFormProps) {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-300">Distance (km)</label>
+              <label className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">Distance (km)</label>
               <input
                 type="number"
                 min="0"
                 step="0.1"
                 value={distanceKm}
                 onChange={(e) => setDistanceKm(Number(e.target.value))}
-                className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-[#5B6FD0]"
+                className="w-full px-3.5 py-2 bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm text-zinc-900 dark:text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
               />
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-slate-300">Full Description</label>
+            <label className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">Full Description</label>
             <textarea
               rows={4}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-[#5B6FD0]"
+              className="w-full p-3 bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
             />
           </div>
         </div>
@@ -287,8 +287,8 @@ export function PropertyForm({ initialData }: PropertyFormProps) {
         {/* Right Column: Image, Coordinates, Amenities, Toggles */}
         <div className="space-y-4">
           {/* Image Uploader to Supabase Storage */}
-          <div className="rounded-2xl bg-slate-900/90 border border-slate-800 p-6 shadow-xl shadow-black/20">
-            <h3 className="text-sm font-bold text-white mb-3">Primary Property Photo</h3>
+          <div className="rounded-2xl bg-white dark:bg-[#111113] border border-zinc-200 dark:border-white/10 p-6 shadow-2xs">
+            <h3 className="text-sm font-bold text-zinc-900 dark:text-white mb-3">Primary Property Photo</h3>
             <ImageUploader
               bucket="property-images"
               currentUrl={imageUrl}
@@ -297,35 +297,35 @@ export function PropertyForm({ initialData }: PropertyFormProps) {
           </div>
 
           {/* Coordinates & Rating */}
-          <div className="rounded-2xl bg-slate-900/90 border border-slate-800 p-6 shadow-xl shadow-black/20 space-y-4">
-            <h3 className="text-sm font-bold text-white">Geographic Pin & Rating</h3>
+          <div className="rounded-2xl bg-white dark:bg-[#111113] border border-zinc-200 dark:border-white/10 p-6 shadow-2xs space-y-4">
+            <h3 className="text-sm font-bold text-zinc-900 dark:text-white">Geographic Pin & Rating</h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-300">Latitude</label>
+                <label className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">Latitude</label>
                 <input
                   type="number"
                   step="0.0001"
                   value={latitude}
                   onChange={(e) => setLatitude(Number(e.target.value))}
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 focus:outline-none focus:border-[#5B6FD0]"
+                  className="w-full px-3.5 py-2 bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-300">Longitude</label>
+                <label className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">Longitude</label>
                 <input
                   type="number"
                   step="0.0001"
                   value={longitude}
                   onChange={(e) => setLongitude(Number(e.target.value))}
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 focus:outline-none focus:border-[#5B6FD0]"
+                  className="w-full px-3.5 py-2 bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <div className="flex items-center justify-between text-xs font-semibold text-slate-300">
+              <div className="flex items-center justify-between text-xs font-semibold text-zinc-700 dark:text-zinc-300">
                 <span>Rating</span>
-                <span className="text-amber-400 font-bold">{rating} / 5.0</span>
+                <span className="text-amber-500 dark:text-amber-400 font-bold">{rating} / 5.0</span>
               </div>
               <input
                 type="range"
@@ -334,15 +334,15 @@ export function PropertyForm({ initialData }: PropertyFormProps) {
                 step="0.1"
                 value={rating}
                 onChange={(e) => setRating(Number(e.target.value))}
-                className="w-full accent-[#5B6FD0]"
+                className="w-full accent-indigo-600"
               />
             </div>
 
             {/* Badges and Toggles */}
-            <div className="pt-2 border-t border-slate-800 flex items-center justify-between">
+            <div className="pt-2 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
               <div>
-                <span className="text-xs font-semibold text-slate-300 block">Verified Badge</span>
-                <span className="text-[11px] text-slate-500">
+                <span className="text-xs font-semibold text-zinc-900 dark:text-zinc-200 block">Verified Badge</span>
+                <span className="text-[11px] text-zinc-500 dark:text-zinc-400">
                   {isSuperAdmin ? 'Shows verified badge in Flutter app' : 'Verified by Super Admin upon review'}
                 </span>
               </div>
@@ -351,29 +351,29 @@ export function PropertyForm({ initialData }: PropertyFormProps) {
                 disabled={!isSuperAdmin}
                 checked={isVerified}
                 onChange={(e) => setIsVerified(e.target.checked)}
-                className="w-4 h-4 accent-[#5B6FD0] cursor-pointer disabled:opacity-50"
+                className="w-4 h-4 accent-indigo-600 cursor-pointer disabled:opacity-50"
               />
             </div>
 
-            <div className="pt-2 border-t border-slate-800 flex items-center justify-between">
+            <div className="pt-2 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
               <div>
-                <span className="text-xs font-semibold text-slate-300 block">Live Status (Active)</span>
-                <span className="text-[11px] text-slate-500">Visible to users on mobile</span>
+                <span className="text-xs font-semibold text-zinc-900 dark:text-zinc-200 block">Live Status (Active)</span>
+                <span className="text-[11px] text-zinc-500 dark:text-zinc-400">Visible to users on mobile</span>
               </div>
               <input
                 type="checkbox"
                 checked={isActive}
                 onChange={(e) => setIsActive(e.target.checked)}
-                className="w-4 h-4 accent-[#5B6FD0] cursor-pointer"
+                className="w-4 h-4 accent-indigo-600 cursor-pointer"
               />
             </div>
           </div>
         </div>
 
         {/* Amenities Selection (Full Width) */}
-        <div className="md:col-span-2 rounded-2xl bg-slate-900/90 border border-slate-800 p-6 shadow-xl shadow-black/20">
-          <h3 className="text-sm font-bold text-white mb-1">Amenities Included</h3>
-          <p className="text-xs text-slate-400 mb-4">Click chips to toggle available facilities</p>
+        <div className="md:col-span-2 rounded-2xl bg-white dark:bg-[#111113] border border-zinc-200 dark:border-white/10 p-6 shadow-2xs">
+          <h3 className="text-sm font-bold text-zinc-900 dark:text-white mb-1">Amenities Included</h3>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-4">Click chips to toggle available facilities</p>
           <div className="flex flex-wrap gap-2">
             {AVAILABLE_AMENITIES.map((item) => {
               const selected = amenities.includes(item)
@@ -382,10 +382,10 @@ export function PropertyForm({ initialData }: PropertyFormProps) {
                   type="button"
                   key={item}
                   onClick={() => toggleAmenity(item)}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold border transition-all ${
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
                     selected
-                      ? 'bg-[#5B6FD0] text-white border-indigo-400 shadow-md shadow-indigo-600/30'
-                      : 'bg-slate-950 text-slate-400 border-slate-800 hover:border-slate-700'
+                      ? 'bg-indigo-600 text-white border-indigo-500 shadow-2xs'
+                      : 'bg-zinc-50 hover:bg-zinc-100 dark:bg-zinc-900/60 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-800'
                   }`}
                 >
                   {selected && '✓ '}

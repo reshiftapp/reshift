@@ -325,23 +325,23 @@ export function UserDetailView({
         )}
 
         {/* Navigation Tabs */}
-        <div className="flex items-center gap-2 mt-6 border-b border-slate-800 pb-px">
+        <div className="flex items-center gap-2 mt-6 border-b border-zinc-200 dark:border-zinc-800 pb-px">
           {[
             { id: 'overview', label: 'Relocation Progress', count: `${completedMap.size}/${relocationSteps.length}` },
-            { id: 'posts', label: 'Community Posts', count: posts.length },
+            { id: 'posts', label: 'Community Discussions', count: posts.length },
             { id: 'tickets', label: 'Support Tickets', count: tickets.length },
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`px-4 py-2.5 text-xs font-semibold rounded-t-xl transition-all border-b-2 flex items-center gap-2 ${
+              className={`px-4 py-2.5 text-xs font-semibold rounded-t-xl transition-all border-b-2 flex items-center gap-2 cursor-pointer ${
                 activeTab === tab.id
-                  ? 'border-[#5B6FD0] text-white bg-indigo-500/10'
-                  : 'border-transparent text-slate-400 hover:text-slate-200'
+                  ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400 bg-indigo-50/60 dark:bg-indigo-950/20'
+                  : 'border-transparent text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
               }`}
             >
               <span>{tab.label}</span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] bg-slate-800 text-slate-300">
+              <span className="px-2 py-0.5 rounded-full text-[10px] bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300">
                 {tab.count}
               </span>
             </button>
@@ -352,8 +352,8 @@ export function UserDetailView({
         {activeTab === 'overview' && (
           <div className="mt-6 space-y-3">
             <div className="flex items-center justify-between mb-2">
-              <h4 className="text-sm font-bold text-white">5-Step Relocation Checklist State</h4>
-              <span className="text-xs text-slate-400">
+              <h4 className="text-sm font-bold text-zinc-900 dark:text-white">5-Step Relocation Checklist State</h4>
+              <span className="text-xs text-zinc-500 dark:text-zinc-400">
                 Moderator can toggle checklist items on behalf of the user
               </span>
             </div>
@@ -364,38 +364,38 @@ export function UserDetailView({
                   key={step.id}
                   className={`flex items-center justify-between p-4 rounded-xl border transition-all ${
                     isCompleted
-                      ? 'bg-slate-950/60 border-emerald-500/30'
-                      : 'bg-slate-950/40 border-slate-800'
+                      ? 'bg-emerald-50/40 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/40'
+                      : 'bg-zinc-50/60 dark:bg-zinc-900/40 border-zinc-200 dark:border-zinc-800'
                   }`}
                 >
                   <div className="flex items-start gap-3">
                     <button
                       onClick={() => handleToggleChecklist(step.id, isCompleted)}
                       disabled={isPending}
-                      className="mt-0.5 text-slate-400 hover:scale-110 transition-transform"
+                      className="mt-0.5 text-zinc-400 hover:scale-110 transition-transform cursor-pointer"
                     >
                       {isCompleted ? (
-                        <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                        <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                       ) : (
-                        <Circle className="w-5 h-5 text-slate-600 hover:text-slate-400" />
+                        <Circle className="w-5 h-5 text-zinc-400 dark:text-zinc-600 hover:text-zinc-600 dark:hover:text-zinc-400" />
                       )}
                     </button>
                     <div>
-                      <div className={`text-sm font-semibold ${isCompleted ? 'text-slate-200 line-through' : 'text-white'}`}>
+                      <div className={`text-sm font-semibold ${isCompleted ? 'text-zinc-400 dark:text-zinc-400 line-through' : 'text-zinc-900 dark:text-white'}`}>
                         {step.title}
                       </div>
                       {step.subtitle && (
-                        <div className="text-xs text-slate-400 mt-0.5">{step.subtitle}</div>
+                        <div className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">{step.subtitle}</div>
                       )}
                     </div>
                   </div>
                   <button
                     onClick={() => handleToggleChecklist(step.id, isCompleted)}
                     disabled={isPending}
-                    className={`px-3 py-1 rounded-lg text-xs font-semibold border transition-colors ${
+                    className={`px-3 py-1 rounded-lg text-xs font-semibold border transition-colors cursor-pointer ${
                       isCompleted
-                        ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20'
-                        : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700'
+                        ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/50 hover:bg-emerald-100'
+                        : 'bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700'
                     }`}
                   >
                     {isCompleted ? 'Mark Pending' : 'Mark Completed'}
@@ -409,31 +409,31 @@ export function UserDetailView({
         {/* TAB 2: Community Posts */}
         {activeTab === 'posts' && (
           <div className="mt-6 space-y-3">
-            <h4 className="text-sm font-bold text-white mb-2">Authored Community Discussions</h4>
+            <h4 className="text-sm font-bold text-zinc-900 dark:text-white mb-2">Authored Community Discussions</h4>
             {posts.length > 0 ? (
               posts.map((post) => (
                 <div
                   key={post.id}
-                  className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 flex items-start justify-between gap-4"
+                  className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 flex items-start justify-between gap-4"
                 >
                   <div className="space-y-1.5 flex-1">
                     <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[10px] font-semibold">
+                      <span className="px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800/50 text-[10px] font-semibold">
                         {post.category}
                       </span>
                       {post.city && (
-                        <span className="text-[11px] text-slate-400 flex items-center gap-1">
+                        <span className="text-[11px] text-zinc-500 dark:text-zinc-400 flex items-center gap-1">
                           <MapPin className="w-3 h-3" /> {post.city}
                         </span>
                       )}
-                      <span className="text-[11px] text-slate-500">{formatDate(post.created_at)}</span>
+                      <span className="text-[11px] text-zinc-400 dark:text-zinc-500">{formatDate(post.created_at)}</span>
                     </div>
-                    <p className="text-sm text-slate-200 leading-relaxed">{post.content}</p>
+                    <p className="text-sm text-zinc-800 dark:text-zinc-200 leading-relaxed">{post.content}</p>
                   </div>
                   <button
                     onClick={() => handleDeletePost(post.id)}
                     disabled={isPending}
-                    className="p-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 transition-colors"
+                    className="p-2 rounded-lg bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/40 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800/50 transition-colors cursor-pointer"
                     title="Delete Post"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -441,7 +441,7 @@ export function UserDetailView({
                 </div>
               ))
             ) : (
-              <div className="p-8 text-center text-xs text-slate-500 bg-slate-950/40 rounded-xl border border-slate-800">
+              <div className="p-8 text-center text-xs text-zinc-400 dark:text-zinc-500 bg-zinc-50/60 dark:bg-zinc-900/40 rounded-xl border border-zinc-200 dark:border-zinc-800">
                 No community discussions created by this user yet.
               </div>
             )}
@@ -451,28 +451,28 @@ export function UserDetailView({
         {/* TAB 3: Support Tickets */}
         {activeTab === 'tickets' && (
           <div className="mt-6 space-y-3">
-            <h4 className="text-sm font-bold text-white mb-2">Support Ticket Submissions</h4>
+            <h4 className="text-sm font-bold text-zinc-900 dark:text-white mb-2">Support Ticket Submissions</h4>
             {tickets.length > 0 ? (
               tickets.map((t) => (
                 <div
                   key={t.id}
-                  className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between"
+                  className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 flex items-center justify-between"
                 >
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-semibold text-white text-sm">#{t.ticket_number || t.id.slice(0, 8)}</span>
-                      <span className="text-xs text-slate-300 font-medium">{t.subject}</span>
+                      <span className="font-semibold text-zinc-900 dark:text-white text-sm">#{t.ticket_number || t.id.slice(0, 8)}</span>
+                      <span className="text-xs text-zinc-700 dark:text-zinc-300 font-medium">{t.subject}</span>
                     </div>
-                    <p className="text-xs text-slate-400 mt-1">{t.description}</p>
-                    <div className="text-[11px] text-slate-500 mt-2">Submitted {formatDate(t.created_at)}</div>
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">{t.description}</p>
+                    <div className="text-[11px] text-zinc-400 dark:text-zinc-500 mt-2">Submitted {formatDate(t.created_at)}</div>
                   </div>
-                  <span className="px-2.5 py-1 rounded-md text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700">
+                  <span className="px-2.5 py-1 rounded-md text-xs font-semibold bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700">
                     {t.status}
                   </span>
                 </div>
               ))
             ) : (
-              <div className="p-8 text-center text-xs text-slate-500 bg-slate-950/40 rounded-xl border border-slate-800">
+              <div className="p-8 text-center text-xs text-zinc-400 dark:text-zinc-500 bg-zinc-50/60 dark:bg-zinc-900/40 rounded-xl border border-zinc-200 dark:border-zinc-800">
                 No support tickets raised by this user.
               </div>
             )}
@@ -482,35 +482,35 @@ export function UserDetailView({
 
       {/* Suspension Confirmation Modal */}
       {suspensionModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-4">
-            <div className="flex items-center gap-3 text-rose-400">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+          <div className="w-full max-w-md bg-white dark:bg-[#111113] border border-zinc-200 dark:border-white/10 rounded-2xl p-6 shadow-xl space-y-4">
+            <div className="flex items-center gap-3 text-rose-600 dark:text-rose-400">
               <ShieldAlert className="w-6 h-6" />
-              <h3 className="text-base font-bold text-white">Suspend User Account</h3>
+              <h3 className="text-base font-bold text-zinc-900 dark:text-white">Suspend User Account</h3>
             </div>
-            <p className="text-xs text-slate-400">
-              Suspending this account will block the user from logging into the Reshift mobile app and interacting with community posts.
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+              Suspending this account will block the user from logging into the ReShift mobile app and interacting with community posts.
             </p>
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-300">Mandatory Suspension Reason</label>
+              <label className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">Mandatory Suspension Reason</label>
               <textarea
                 value={suspensionReason}
                 onChange={(e) => setSuspensionReason(e.target.value)}
                 placeholder="e.g. Inappropriate conduct, spamming community feed..."
-                className="w-full h-24 p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-rose-500"
+                className="w-full h-24 p-3 bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:border-rose-500"
               />
             </div>
             <div className="flex items-center justify-end gap-2.5 pt-2">
               <button
                 onClick={() => setSuspensionModalOpen(false)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"
+                className="px-4 py-2 rounded-xl text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={() => handleToggleSuspension(true)}
                 disabled={isPending || !suspensionReason.trim()}
-                className="px-4 py-2 rounded-xl text-xs font-semibold bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white"
+                className="px-4 py-2 rounded-xl text-xs font-semibold bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white cursor-pointer shadow-2xs"
               >
                 Confirm Suspension
               </button>

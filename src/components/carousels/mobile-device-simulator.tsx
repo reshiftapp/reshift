@@ -30,12 +30,12 @@ export function MobileDeviceSimulator({
   }, [featuredEvents.length])
 
   return (
-    <div className="w-[320px] rounded-[44px] bg-slate-900 border-[8px] border-slate-800 p-3 shadow-2xl shadow-black/80 flex flex-col justify-between select-none">
+    <div className="w-[320px] rounded-[44px] bg-zinc-900 border-[8px] border-zinc-800 p-3 shadow-2xl shadow-black/40 flex flex-col justify-between select-none ring-1 ring-zinc-700/50">
       {/* Smartphone Notch / Dynamic Island */}
-      <div className="relative pt-2 pb-1 px-4 flex items-center justify-between text-[11px] font-semibold text-slate-300">
+      <div className="relative pt-2 pb-1 px-4 flex items-center justify-between text-[11px] font-semibold text-zinc-300">
         <span>09:41</span>
         <div className="w-20 h-4 rounded-full bg-black mx-auto absolute left-1/2 -translate-x-1/2 top-2" />
-        <div className="flex items-center gap-1.5 text-slate-400">
+        <div className="flex items-center gap-1.5 text-zinc-400">
           <Signal className="w-3 h-3" />
           <Wifi className="w-3 h-3" />
           <Battery className="w-3.5 h-3.5 text-white" />
@@ -43,22 +43,22 @@ export function MobileDeviceSimulator({
       </div>
 
       {/* Screen Viewport */}
-      <div className="mt-2 rounded-[28px] bg-slate-950 overflow-hidden border border-slate-800/80 h-[580px] flex flex-col">
+      <div className="mt-2 rounded-[28px] bg-[#09090b] overflow-hidden border border-zinc-800 h-[580px] flex flex-col">
         {/* Mobile App Header */}
-        <div className="px-4 py-3 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between">
+        <div className="px-4 py-3 bg-[#111113] border-b border-zinc-800/80 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-[#5B6FD0] to-indigo-400 flex items-center justify-center text-white font-bold text-xs shadow-md">
+            <div className="w-7 h-7 rounded-lg bg-[#5B6FD0] flex items-center justify-center text-white font-bold text-xs shadow-md">
               R
             </div>
             <div>
-              <div className="text-[10px] text-slate-400 leading-none">Exploring in</div>
+              <div className="text-[10px] text-zinc-400 leading-none">Exploring in</div>
               <div className="text-xs font-bold text-white flex items-center gap-1 mt-0.5">
                 <MapPin className="w-3 h-3 text-[#5B6FD0]" />
                 <span>{city}</span>
               </div>
             </div>
           </div>
-          <div className="w-7 h-7 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-300">
+          <div className="w-7 h-7 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-[10px] font-bold text-zinc-300">
             JD
           </div>
         </div>
@@ -75,7 +75,7 @@ export function MobileDeviceSimulator({
             </div>
 
             {featuredEvents.length > 0 ? (
-              <div className="relative rounded-2xl overflow-hidden h-36 bg-slate-900 border border-slate-800 shadow-md">
+              <div className="relative rounded-2xl overflow-hidden h-36 bg-zinc-900 border border-zinc-800 shadow-md">
                 {featuredEvents[activeSlide]?.image_url ? (
                   <img
                     src={featuredEvents[activeSlide].image_url!}
@@ -83,7 +83,7 @@ export function MobileDeviceSimulator({
                     className="w-full h-full object-cover transition-opacity duration-500"
                   />
                 ) : (
-                  <div className="w-full h-full bg-gradient-to-tr from-indigo-950 to-slate-900 flex items-center justify-center p-3 text-center text-xs text-slate-400">
+                  <div className="w-full h-full bg-zinc-900 flex items-center justify-center p-3 text-center text-xs text-zinc-400">
                     {featuredEvents[activeSlide]?.title}
                   </div>
                 )}
@@ -94,7 +94,7 @@ export function MobileDeviceSimulator({
                   <div className="text-xs font-bold text-white line-clamp-1 mt-1">
                     {featuredEvents[activeSlide]?.title}
                   </div>
-                  <div className="text-[10px] text-slate-300 line-clamp-1">
+                  <div className="text-[10px] text-zinc-300 line-clamp-1">
                     {featuredEvents[activeSlide]?.venue}
                   </div>
                 </div>
@@ -114,7 +114,7 @@ export function MobileDeviceSimulator({
                 )}
               </div>
             ) : (
-              <div className="rounded-2xl border border-dashed border-slate-800 p-6 text-center text-[10px] text-slate-500">
+              <div className="rounded-2xl border border-dashed border-zinc-800 p-6 text-center text-[10px] text-zinc-500">
                 No events currently marked as Featured in {city}.
               </div>
             )}
@@ -130,21 +130,21 @@ export function MobileDeviceSimulator({
                 exploreCards.map((c) => (
                   <div
                     key={c.id}
-                    className="min-w-[120px] rounded-xl overflow-hidden bg-slate-900 border border-slate-800 flex-shrink-0"
+                    className="min-w-[120px] rounded-xl overflow-hidden bg-zinc-900 border border-zinc-800 flex-shrink-0"
                   >
-                    <div className="h-16 bg-slate-800">
+                    <div className="h-16 bg-zinc-800">
                       {c.image_url && (
                         <img src={c.image_url} alt="" className="w-full h-full object-cover" />
                       )}
                     </div>
                     <div className="p-2">
                       <div className="text-[10px] font-bold text-white truncate">{c.title}</div>
-                      <div className="text-[8px] text-slate-400 truncate">{c.subtitle}</div>
+                      <div className="text-[8px] text-zinc-400 truncate">{c.subtitle}</div>
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="w-full py-4 text-center text-[10px] text-slate-500 border border-dashed border-slate-800 rounded-xl">
+                <div className="w-full py-4 text-center text-[10px] text-zinc-500 border border-dashed border-zinc-800 rounded-xl">
                   No explore cards active
                 </div>
               )}
@@ -153,7 +153,7 @@ export function MobileDeviceSimulator({
         </div>
 
         {/* Mobile App Bottom Tab Bar */}
-        <div className="h-12 bg-slate-900/90 border-t border-slate-800 flex items-center justify-around text-[10px] text-slate-400">
+        <div className="h-12 bg-[#111113] border-t border-zinc-800/80 flex items-center justify-around text-[10px] text-zinc-400">
           <span className="text-[#5B6FD0] font-bold">Home</span>
           <span>Housing</span>
           <span>Explore</span>
@@ -162,7 +162,7 @@ export function MobileDeviceSimulator({
       </div>
 
       {/* Home Indicator Bar */}
-      <div className="w-28 h-1 rounded-full bg-slate-700 mx-auto mt-2" />
+      <div className="w-28 h-1 rounded-full bg-zinc-700 mx-auto mt-2" />
     </div>
   )
 }

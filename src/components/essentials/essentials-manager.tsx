@@ -12,8 +12,6 @@ import {
   Phone,
   Trash2,
   X,
-  CheckCircle2,
-  Building
 } from 'lucide-react'
 
 type PlaceRow = Database['public']['Tables']['essential_places']['Row']
@@ -105,15 +103,15 @@ export function EssentialsManager({
   return (
     <div className="space-y-4">
       {/* Search Toolbar */}
-      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 bg-slate-900/90 border border-slate-800 p-4 rounded-2xl shadow-lg shadow-black/20">
+      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 bg-white dark:bg-[#111113] border border-zinc-200 dark:border-white/10 p-4 rounded-2xl shadow-2xs">
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search stores, banks, pharmacies, utilities..."
-            className="w-full pl-9 pr-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-[#5B6FD0]"
+            className="w-full pl-9 pr-4 py-2 bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs sm:text-sm text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
           />
         </div>
 
@@ -121,7 +119,7 @@ export function EssentialsManager({
           <select
             value={cityFilter}
             onChange={(e) => setCityFilter(e.target.value)}
-            className="px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-300 focus:outline-none focus:border-[#5B6FD0]"
+            className="px-3 py-2 bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs text-zinc-700 dark:text-zinc-300 focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer"
           >
             <option value="All">All Cities</option>
             <option value="Kochi">Kochi</option>
@@ -135,7 +133,7 @@ export function EssentialsManager({
             <select
               value={catFilter}
               onChange={(e) => setCatFilter(e.target.value)}
-              className="px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-300 focus:outline-none focus:border-[#5B6FD0]"
+              className="px-3 py-2 bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs text-zinc-700 dark:text-zinc-300 focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer"
             >
               <option value="All">All Categories</option>
               {CATEGORIES.map((c) => (
@@ -148,7 +146,7 @@ export function EssentialsManager({
 
           <button
             onClick={() => setModalOpen(true)}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-[#5B6FD0] hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/30 transition-all"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 hover:bg-zinc-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 text-white shadow-2xs transition-all cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>Add Place</span>
@@ -162,49 +160,49 @@ export function EssentialsManager({
           filtered.map((p) => (
             <div
               key={p.id}
-              className="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col justify-between shadow-lg shadow-black/20 space-y-3"
+              className="p-5 rounded-2xl bg-white dark:bg-[#111113] border border-zinc-200 dark:border-white/10 flex flex-col justify-between shadow-2xs space-y-3"
             >
               <div>
                 <div className="flex items-start justify-between">
                   <div>
-                    <h3 className="font-bold text-white text-base leading-snug">{p.name}</h3>
-                    <span className="inline-block mt-1 px-2.5 py-0.5 rounded-md text-[10px] font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                    <h3 className="font-bold text-zinc-900 dark:text-white text-base leading-snug">{p.name}</h3>
+                    <span className="inline-block mt-1 px-2.5 py-0.5 rounded-md text-[10px] font-semibold bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800/50">
                       {p.category}
                     </span>
                   </div>
                   <button
                     onClick={() => handleToggleOpen(p.id, p.is_open)}
                     disabled={isPending}
-                    className={`px-2.5 py-1 rounded-full text-[10px] font-bold border transition-all ${
+                    className={`px-2.5 py-1 rounded-full text-[10px] font-bold border transition-all cursor-pointer ${
                       p.is_open
-                        ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-                        : 'bg-rose-500/10 text-rose-400 border-rose-500/20'
+                        ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/50'
+                        : 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 border-rose-200 dark:border-rose-800/50'
                     }`}
                   >
                     {p.is_open ? 'Open Now' : 'Closed'}
                   </button>
                 </div>
 
-                <div className="text-xs text-slate-400 space-y-1 mt-2">
+                <div className="text-xs text-zinc-500 dark:text-zinc-400 space-y-1 mt-2">
                   <div className="flex items-center gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" />
+                    <MapPin className="w-3.5 h-3.5 text-zinc-400 flex-shrink-0" />
                     <span>{p.address || p.city}</span>
                   </div>
                   {p.phone_number && (
-                    <div className="flex items-center gap-1.5 font-mono text-slate-300">
-                      <Phone className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" />
+                    <div className="flex items-center gap-1.5 font-mono text-zinc-600 dark:text-zinc-300">
+                      <Phone className="w-3.5 h-3.5 text-zinc-400 flex-shrink-0" />
                       <span>{p.phone_number}</span>
                     </div>
                   )}
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
-                <span className="text-slate-500">{p.city}</span>
+              <div className="pt-3 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between text-xs">
+                <span className="text-zinc-500 dark:text-zinc-400">{p.city}</span>
                 <button
                   onClick={() => handleDelete(p.id, p.name)}
                   disabled={isPending}
-                  className="p-1.5 rounded-lg text-rose-400 hover:bg-rose-500/20 transition-colors"
+                  className="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer"
                   title="Delete Place"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
@@ -213,8 +211,8 @@ export function EssentialsManager({
             </div>
           ))
         ) : (
-          <div className="col-span-full p-16 text-center text-sm text-slate-500 bg-slate-900/60 rounded-2xl border border-slate-800">
-            <ShoppingBag className="w-10 h-10 mx-auto text-slate-700 mb-2" />
+          <div className="col-span-full p-16 text-center text-sm text-zinc-400 dark:text-zinc-500 bg-white dark:bg-[#111113] rounded-2xl border border-zinc-200 dark:border-zinc-800">
+            <ShoppingBag className="w-10 h-10 mx-auto text-zinc-300 dark:text-zinc-700 mb-2" />
             <div>No places found matching your filters.</div>
           </div>
         )}
@@ -222,34 +220,34 @@ export function EssentialsManager({
 
       {/* Add Place Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-              <h3 className="text-base font-bold text-white">Add Place</h3>
-              <button onClick={() => setModalOpen(false)} className="text-slate-400 hover:text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+          <div className="w-full max-w-md bg-white dark:bg-[#111113] border border-zinc-200 dark:border-white/10 rounded-2xl p-6 shadow-xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-zinc-200 dark:border-zinc-800">
+              <h3 className="text-base font-bold text-zinc-900 dark:text-white">Add Place</h3>
+              <button onClick={() => setModalOpen(false)} className="text-zinc-400 hover:text-zinc-600 dark:hover:text-white cursor-pointer">
                 <X className="w-5 h-5" />
               </button>
             </div>
             <form onSubmit={handleCreate} className="space-y-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-300">Name *</label>
+                <label className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">Name *</label>
                 <input
                   type="text"
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Apollo Pharmacy or LuLu Hypermarket"
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 focus:outline-none focus:border-[#5B6FD0]"
+                  className="w-full px-3.5 py-2 bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-indigo-500 transition-colors"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-slate-300">City</label>
+                  <label className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">City</label>
                   <select
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
-                    className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 focus:outline-none focus:border-[#5B6FD0]"
+                    className="w-full px-3.5 py-2 bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-indigo-500 transition-colors"
                   >
                     <option value="Kochi">Kochi</option>
                     <option value="Bangalore">Bangalore</option>
@@ -260,11 +258,11 @@ export function EssentialsManager({
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-slate-300">Category</label>
+                  <label className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">Category</label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 focus:outline-none focus:border-[#5B6FD0]"
+                    className="w-full px-3.5 py-2 bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-indigo-500 transition-colors"
                   >
                     {CATEGORIES.map((c) => (
                       <option key={c} value={c}>
@@ -276,24 +274,24 @@ export function EssentialsManager({
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-300">Address / Location</label>
+                <label className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">Address / Location</label>
                 <input
                   type="text"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                   placeholder="e.g. Edappally Toll Junction"
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 focus:outline-none focus:border-[#5B6FD0]"
+                  className="w-full px-3.5 py-2 bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-indigo-500 transition-colors"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-300">Phone Number</label>
+                <label className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">Phone Number</label>
                 <input
                   type="text"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   placeholder="e.g. +91 98460 12345"
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 focus:outline-none focus:border-[#5B6FD0]"
+                  className="w-full px-3.5 py-2 bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-indigo-500 transition-colors"
                 />
               </div>
 
@@ -301,14 +299,14 @@ export function EssentialsManager({
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="px-5 py-2 rounded-xl text-xs font-semibold bg-[#5B6FD0] hover:bg-indigo-500 text-white"
+                  className="px-5 py-2 rounded-xl text-xs font-semibold bg-zinc-900 hover:bg-zinc-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 text-white cursor-pointer shadow-2xs"
                 >
                   {isPending ? 'Saving...' : 'Add Place'}
                 </button>

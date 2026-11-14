@@ -1,10 +1,10 @@
 'use client'
 
 import React, { useState } from 'react'
-import { UploadCloud, X, Check, Loader2, Image as ImageIcon } from 'lucide-react'
+import { UploadCloud, X, Loader2 } from 'lucide-react'
 
 interface ImageUploaderProps {
-  bucket: 'property-images' | 'food-images' | 'event-images' | 'guide-images' | 'carousel-images' | 'notification-images' | 'profilepicture'
+  bucket: 'property-images' | 'food-images' | 'event-images' | 'guide-images' | 'carousel-images' | 'notification-images' | 'profilepicture' | 'id-cards'
   currentUrl?: string | null
   onUploadComplete: (url: string) => void
   label?: string
@@ -61,15 +61,16 @@ export function ImageUploader({
 
   return (
     <div className="space-y-2">
-      {label && <label className="text-xs font-semibold text-slate-300">{label}</label>}
+      {label && <label className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">{label}</label>}
 
       {preview ? (
-        <div className="relative w-full h-48 rounded-2xl overflow-hidden border border-slate-700 bg-slate-900 group">
+        <div className="relative w-full h-48 rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900 group">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={preview} alt="Uploaded preview" className="w-full h-full object-cover" />
           {uploading && (
             <div className="absolute inset-0 bg-black/60 flex items-center justify-center gap-2 text-xs font-semibold text-white">
-              <Loader2 className="w-5 h-5 animate-spin text-[#5B6FD0]" />
-              <span>Uploading to Supabase Storage...</span>
+              <Loader2 className="w-5 h-5 animate-spin text-indigo-400" />
+              <span>Uploading to Storage...</span>
             </div>
           )}
           {!uploading && (
@@ -77,7 +78,7 @@ export function ImageUploader({
               <button
                 type="button"
                 onClick={handleClear}
-                className="p-1.5 rounded-lg bg-black/70 hover:bg-rose-600 text-white transition-colors"
+                className="p-1.5 rounded-lg bg-zinc-900/80 hover:bg-rose-600 text-white transition-colors cursor-pointer"
                 title="Remove image"
               >
                 <X className="w-4 h-4" />
@@ -86,14 +87,14 @@ export function ImageUploader({
           )}
         </div>
       ) : (
-        <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-slate-700 hover:border-[#5B6FD0] rounded-2xl cursor-pointer bg-slate-950/40 hover:bg-slate-900/60 transition-all p-4 group">
-          <div className="p-3 rounded-full bg-slate-800 text-slate-400 group-hover:text-indigo-400 group-hover:scale-110 transition-transform">
+        <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-zinc-200 dark:border-zinc-800 hover:border-indigo-500 dark:hover:border-indigo-400 rounded-2xl cursor-pointer bg-zinc-50/70 hover:bg-zinc-100 dark:bg-zinc-900/40 dark:hover:bg-zinc-900/70 transition-all p-4 group">
+          <div className="p-3 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 group-hover:scale-105 transition-transform">
             <UploadCloud className="w-6 h-6" />
           </div>
-          <span className="text-xs font-semibold text-slate-300 mt-2">
+          <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 mt-2">
             Click to upload or drag & drop image
           </span>
-          <span className="text-[11px] text-slate-500 mt-0.5">
+          <span className="text-[11px] text-zinc-400 dark:text-zinc-500 mt-0.5">
             PNG, JPG, WebP up to 10MB • Bucket: {bucket}
           </span>
           <input
@@ -106,7 +107,7 @@ export function ImageUploader({
         </label>
       )}
 
-      {error && <p className="text-xs text-rose-400 mt-1">{error}</p>}
+      {error && <p className="text-xs text-rose-500 dark:text-rose-400 mt-1">{error}</p>}
     </div>
   )
 }
