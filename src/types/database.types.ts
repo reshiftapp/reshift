@@ -843,6 +843,42 @@ export interface Database {
         }
         Relationships: []
       }
+      cities: {
+        Row: {
+          id: string
+          name: string
+          label: string
+          state: string
+          latitude: number
+          longitude: number
+          is_active: boolean
+          created_at: string
+          created_by: string | null
+        }
+        Insert: {
+          id?: string
+          name: string
+          label?: string
+          state: string
+          latitude: number
+          longitude: number
+          is_active?: boolean
+          created_at?: string
+          created_by?: string | null
+        }
+        Update: {
+          id?: string
+          name?: string
+          label?: string
+          state?: string
+          latitude?: number
+          longitude?: number
+          is_active?: boolean
+          created_at?: string
+          created_by?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
