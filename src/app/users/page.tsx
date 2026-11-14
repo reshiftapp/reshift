@@ -23,10 +23,10 @@ export default async function UsersPage() {
         <div>
           <h1 className="text-2xl font-black text-white tracking-tight flex items-center gap-2.5">
             <Users className="w-6 h-6 text-[#5B6FD0]" />
-            <span>User Management</span>
+            <span>App Customers & Registered Residents</span>
           </h1>
           <p className="text-xs text-slate-400 mt-1">
-            Real-time control, account status, role elevation, and activity moderation for {users.length} registered users.
+            Registered customers from the Flutter mobile app ({users.length} residents). Customers browse and apply for properties listed by our staff.
           </p>
         </div>
       </div>

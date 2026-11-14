@@ -12,21 +12,36 @@ export async function GET() {
       return NextResponse.json({ success: false, message: error.message }, { status: 500 })
     }
 
-    // Filter users who have registered through volunteer/staff portal (or all users)
-    const applications = userList.users.map((u) => {
+    // Filter ONLY users who explicitly registered as staff / volunteers.
+    // Flutter mobile app customers MUST NOT appear here.
+    const staffUsers = userList.users.filter((u) => {
+      const meta = u.user_metadata || {}
+      // Super admin is not an applicant
+      if (meta.role === 'super_admin' || u.email === 'reshiftapp@gmail.com') return false
+
+      // Only staff applicants who have registered through staff portal
+      return (
+        meta.is_staff === true ||
+        Boolean(meta.id_card_url) ||
+        Boolean(meta.idCardUrl) ||
+        (Boolean(meta.approval_status) && meta.approval_status !== 'customer')
+      )
+    })
+
+    const applications = staffUsers.map((u) => {
       const meta = u.user_metadata || {}
       return {
         id: u.id,
         email: u.email,
-        fullName: meta.full_name || 'Anonymous User',
+        fullName: meta.full_name || 'Anonymous Applicant',
         mobileNumber: meta.mobile_number || 'N/A',
-        idCardUrl: meta.id_card_url || null,
-        approvalStatus: meta.approval_status || (meta.role === 'super_admin' ? 'approved' : 'approved'),
+        idCardUrl: meta.id_card_url || meta.idCardUrl || null,
+        approvalStatus: (meta.approval_status as 'pending' | 'approved' | 'rejected') || 'pending',
         rejectionReason: meta.rejection_reason || null,
         role: meta.role || meta.requested_role || 'volunteer',
         city: meta.city || 'Kochi',
         createdAt: u.created_at,
-        isSuperAdmin: meta.role === 'super_admin' || u.email === 'reshiftapp@gmail.com',
+        isSuperAdmin: false,
       }
     })
 

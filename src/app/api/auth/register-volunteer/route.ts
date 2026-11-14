@@ -81,8 +81,10 @@ export async function POST(request: Request) {
       password,
       email_confirm: true, // confirmed in auth, but application status is pending
       user_metadata: {
+        is_staff: true,
         full_name: fullName.trim(),
         mobile_number: mobileNumber.trim(),
+        idCardUrl: idCardUrl.trim(),
         id_card_url: idCardUrl.trim(),
         approval_status: 'pending',
         requested_role: requestedRole || 'volunteer',

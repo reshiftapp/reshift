@@ -210,11 +210,19 @@ export default function ApprovalsPage() {
       ) : filteredApps.length === 0 ? (
         <div className="p-12 text-center bg-slate-900 border border-slate-800 rounded-2xl space-y-3">
           <ShieldCheck className="w-10 h-10 text-slate-600 mx-auto" />
-          <h3 className="text-base font-semibold text-white">No applications in this category</h3>
-          <p className="text-xs text-slate-400 max-w-sm mx-auto">
+          <h3 className="text-base font-semibold text-white">
             {activeTab === 'pending'
-              ? 'All volunteer and staff applications have been reviewed.'
-              : 'No records matching the selected filter.'}
+              ? 'No pending staff applications'
+              : activeTab === 'approved'
+              ? 'No active staff appointed yet'
+              : 'No rejected staff applications'}
+          </h3>
+          <p className="text-xs text-slate-400 max-w-md mx-auto">
+            {activeTab === 'pending'
+              ? 'When volunteers or moderators register through the staff portal, their applications and company ID photos will appear here for Super Admin verification.'
+              : activeTab === 'approved'
+              ? 'Currently no staff appointed. Verified volunteers and staff members who have access to manage property listings and local gems will appear here.'
+              : 'No rejected staff applications found in records.'}
           </p>
         </div>
       ) : (

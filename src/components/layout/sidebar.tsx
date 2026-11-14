@@ -3,6 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useAuth } from '@/contexts/auth-context'
 import {
   LayoutDashboard,
   Users,
@@ -31,12 +32,13 @@ interface NavItem {
   href: string
   icon: React.ComponentType<{ className?: string }>
   badge?: string
+  superAdminOnly?: boolean
 }
 
 const navItems: NavItem[] = [
   { title: 'Overview', href: '/', icon: LayoutDashboard },
-  { title: 'Staff Approvals', href: '/approvals', icon: UserCheck },
-  { title: 'User Management', href: '/users', icon: Users },
+  { title: 'Staff Approvals', href: '/approvals', icon: UserCheck, superAdminOnly: true },
+  { title: 'App Customers', href: '/users', icon: Users },
   { title: 'Housing / PGs', href: '/housing', icon: Home },
   { title: 'Transport & Buses', href: '/transport', icon: Bus },
   { title: 'Food & Places', href: '/food', icon: UtensilsCrossed },
@@ -50,12 +52,15 @@ const navItems: NavItem[] = [
   { title: 'Carousels & Banners', href: '/carousels', icon: ImageIcon },
   { title: 'Push Notifications', href: '/notifications', icon: Bell },
   { title: 'Support Tickets', href: '/tickets', icon: LifeBuoy },
-  { title: 'App Settings', href: '/settings', icon: Settings },
-  { title: 'Audit Trail', href: '/audit-log', icon: ShieldCheck },
+  { title: 'App Settings & Cities', href: '/settings', icon: Settings, superAdminOnly: true },
+  { title: 'Audit Trail', href: '/audit-log', icon: ShieldCheck, superAdminOnly: true },
 ]
 
 export function Sidebar() {
   const pathname = usePathname()
+  const { isSuperAdmin } = useAuth()
+
+  const visibleNavItems = navItems.filter((item) => !item.superAdminOnly || isSuperAdmin)
 
   return (
     <aside className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col flex-shrink-0 min-h-screen text-slate-300">
@@ -78,7 +83,7 @@ export function Sidebar() {
         <div className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
           Core Operations
         </div>
-        {navItems.map((item) => {
+        {visibleNavItems.map((item) => {
           const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
           const Icon = item.icon
 

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { QueryProvider } from '@/components/providers/query-provider'
+import { AuthProvider } from '@/contexts/auth-context'
 import { CityProvider } from '@/contexts/city-context'
 import { RealtimeProvider } from '@/contexts/realtime-context'
 import { DashboardShell } from '@/components/layout/dashboard-shell'
@@ -35,11 +36,13 @@ export default function RootLayout({
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full dark`}>
       <body className="h-full bg-slate-950 text-slate-100 flex overflow-hidden">
         <QueryProvider>
-          <CityProvider>
-            <RealtimeProvider>
-              <DashboardShell>{children}</DashboardShell>
-            </RealtimeProvider>
-          </CityProvider>
+          <AuthProvider>
+            <CityProvider>
+              <RealtimeProvider>
+                <DashboardShell>{children}</DashboardShell>
+              </RealtimeProvider>
+            </CityProvider>
+          </AuthProvider>
         </QueryProvider>
       </body>
     </html>

@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import { Database } from '@/types/database.types'
 import { createProperty, updateProperty } from '@/app/housing/actions'
 import { ImageUploader } from '@/components/shared/image-uploader'
+import { useAuth } from '@/contexts/auth-context'
+import { useCity } from '@/contexts/city-context'
 import { 
   Building, 
   MapPin, 
@@ -13,7 +15,9 @@ import {
   CheckCircle, 
   Radio, 
   Save, 
-  ArrowLeft 
+  ArrowLeft,
+  Lock,
+  ShieldCheck 
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -40,6 +44,8 @@ const AVAILABLE_AMENITIES = [
 
 export function PropertyForm({ initialData }: PropertyFormProps) {
   const router = useRouter()
+  const { isSuperAdmin } = useAuth()
+  const { cities } = useCity()
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
 
@@ -47,10 +53,10 @@ export function PropertyForm({ initialData }: PropertyFormProps) {
   const [city, setCity] = useState(initialData?.city || 'Kochi')
   const [location, setLocation] = useState(initialData?.location || '')
   const [forWhom, setForWhom] = useState(initialData?.for_whom || 'Girls')
-  const [monthlyRent, setMonthlyRent] = useState(initialData?.monthly_rent || 6500)
+  const [monthlyRent, setMonthlyRent] = useState(initialData?.monthly_rent || (isSuperAdmin ? 6500 : 0))
   const [distanceKm, setDistanceKm] = useState(initialData?.distance_km || 1.5)
   const [rating, setRating] = useState(initialData?.rating || 4.5)
-  const [isVerified, setIsVerified] = useState(initialData?.is_verified ?? true)
+  const [isVerified, setIsVerified] = useState(initialData?.is_verified ?? isSuperAdmin)
   const [isActive, setIsActive] = useState(initialData?.is_active ?? true)
   const [description, setDescription] = useState(
     initialData?.description || 'Furnished PG accommodations with high-speed internet, meals, and modern amenities.'
@@ -180,11 +186,11 @@ export function PropertyForm({ initialData }: PropertyFormProps) {
                 onChange={(e) => setCity(e.target.value)}
                 className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 focus:outline-none focus:border-[#5B6FD0]"
               >
-                <option value="Kochi">Kochi</option>
-                <option value="Bangalore">Bangalore</option>
-                <option value="Trivandrum">Trivandrum</option>
-                <option value="Calicut">Calicut</option>
-                <option value="Chennai">Chennai</option>
+                {cities.filter((c) => c.name !== 'All').map((c) => (
+                  <option key={c.name} value={c.name}>
+                    {c.label} ({c.state})
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -216,16 +222,42 @@ export function PropertyForm({ initialData }: PropertyFormProps) {
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-300">Monthly Rent (₹)</label>
-              <input
-                type="number"
-                min="0"
-                step="500"
-                required
-                value={monthlyRent}
-                onChange={(e) => setMonthlyRent(Number(e.target.value))}
-                className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-[#5B6FD0]"
-              />
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-semibold text-slate-300">Monthly Rent (₹)</label>
+                {isSuperAdmin ? (
+                  <span className="text-[10px] text-amber-400 font-bold px-1.5 py-0.5 rounded bg-amber-500/10 border border-amber-500/20">
+                    👑 Set by Super Admin
+                  </span>
+                ) : (
+                  <span className="text-[10px] text-slate-500 font-medium flex items-center gap-1">
+                    <Lock className="w-3 h-3 text-amber-400" /> Super Admin Only
+                  </span>
+                )}
+              </div>
+              {isSuperAdmin ? (
+                <input
+                  type="number"
+                  min="0"
+                  step="500"
+                  required
+                  value={monthlyRent}
+                  onChange={(e) => setMonthlyRent(Number(e.target.value))}
+                  placeholder="e.g. 7500"
+                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm text-slate-100 focus:outline-none focus:border-[#5B6FD0]"
+                />
+              ) : (
+                <div className="space-y-1">
+                  <input
+                    type="text"
+                    disabled
+                    value={initialData?.monthly_rent ? `₹${initialData.monthly_rent} / month` : 'Pending Super Admin Review'}
+                    className="w-full px-3.5 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-400 cursor-not-allowed select-none"
+                  />
+                  <p className="text-[10px] text-amber-300/80">
+                    Staff listing: You can submit the property details. Official rent price is reviewed and assigned by Super Admin.
+                  </p>
+                </div>
+              )}
             </div>
 
             <div className="space-y-1.5">
@@ -310,13 +342,16 @@ export function PropertyForm({ initialData }: PropertyFormProps) {
             <div className="pt-2 border-t border-slate-800 flex items-center justify-between">
               <div>
                 <span className="text-xs font-semibold text-slate-300 block">Verified Badge</span>
-                <span className="text-[11px] text-slate-500">Shows verified tick in Flutter app</span>
+                <span className="text-[11px] text-slate-500">
+                  {isSuperAdmin ? 'Shows verified badge in Flutter app' : 'Verified by Super Admin upon review'}
+                </span>
               </div>
               <input
                 type="checkbox"
+                disabled={!isSuperAdmin}
                 checked={isVerified}
                 onChange={(e) => setIsVerified(e.target.checked)}
-                className="w-4 h-4 accent-[#5B6FD0] cursor-pointer"
+                className="w-4 h-4 accent-[#5B6FD0] cursor-pointer disabled:opacity-50"
               />
             </div>
 

@@ -221,7 +221,9 @@ export function UserTable({ users }: UserTableProps) {
                             <ShieldCheck className="w-3 h-3" /> {u.moderator_role.replace('_', ' ')}
                           </span>
                         ) : (
-                          <span className="text-slate-500 text-xs">Standard User</span>
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 text-[11px] font-medium border border-slate-700/60">
+                            📱 App Customer ({u.role || 'Resident'})
+                          </span>
                         )}
                       </td>
 
