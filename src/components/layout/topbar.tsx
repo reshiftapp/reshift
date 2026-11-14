@@ -18,7 +18,8 @@ import {
   ExternalLink,
   LogOut,
   UserCheck,
-  KeyRound
+  KeyRound,
+  Plus
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -84,6 +85,19 @@ export function Topbar() {
                     {city === c.name && <Check className="w-4 h-4 text-[#5B6FD0]" />}
                   </button>
                 ))}
+
+                {isSuperAdmin && (
+                  <div className="pt-1 mt-1 border-t border-slate-700/60 px-2 pb-1">
+                    <Link
+                      href="/settings"
+                      onClick={() => setCityDropdownOpen(false)}
+                      className="w-full flex items-center gap-1.5 px-2 py-1.5 text-xs text-indigo-400 hover:text-indigo-300 hover:bg-slate-700/50 rounded-lg transition-colors font-medium"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>+ Add New City</span>
+                    </Link>
+                  </div>
+                )}
               </div>
             </>
           )}
