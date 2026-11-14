@@ -57,7 +57,7 @@ export async function GET() {
         idCardUrl: meta.id_card_url || meta.idCardUrl || null,
         approvalStatus: (meta.approval_status as 'pending' | 'approved' | 'rejected') || 'pending',
         rejectionReason: meta.rejection_reason || null,
-        role: meta.role || meta.requested_role || 'volunteer',
+        role: meta.role || 'unassigned',
         city: meta.city || 'Kochi',
         createdAt: u.created_at,
         isSuperAdmin: false,
@@ -96,7 +96,7 @@ export async function POST(request: Request) {
     const userName = currentMeta.full_name || 'ReShift Volunteer'
 
     if (action === 'approve') {
-      const role = assignedRole || currentMeta.requested_role || 'moderator'
+      const role = assignedRole || 'volunteer'
 
       // Update auth metadata
       const { error: updateErr } = await supabaseAdmin.auth.admin.updateUserById(userId, {

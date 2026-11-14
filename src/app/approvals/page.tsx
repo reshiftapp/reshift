@@ -272,9 +272,17 @@ export default function ApprovalsPage() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-zinc-500 dark:text-zinc-400 flex items-center gap-1.5">
-                      <Sparkles className="w-3.5 h-3.5 text-zinc-400" /> Assigned:
+                      <Sparkles className="w-3.5 h-3.5 text-zinc-400" /> {app.approvalStatus === 'approved' ? 'Assigned Role:' : 'Role Status:'}
                     </span>
-                    <span className="font-medium text-indigo-600 dark:text-indigo-400 capitalize">{app.role}</span>
+                    <span className="font-medium text-indigo-600 dark:text-indigo-400 capitalize">
+                      {app.approvalStatus === 'approved'
+                        ? app.role === 'moderator'
+                          ? 'Community & Housing Moderator'
+                          : app.role === 'content_editor'
+                          ? 'Content & Guide Editor'
+                          : 'City Field Volunteer'
+                        : 'To be assigned on approval'}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-zinc-500 dark:text-zinc-400 flex items-center gap-1.5">

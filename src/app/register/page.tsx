@@ -16,7 +16,6 @@ import {
   Check,
   ShieldCheck,
   Building2,
-  Briefcase,
   Phone,
   FileText,
   BadgeCheck,
@@ -28,7 +27,6 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('')
   const [mobileNumber, setMobileNumber] = useState('')
   const [city, setCity] = useState('Kochi')
-  const [requestedRole, setRequestedRole] = useState('volunteer')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [idCardUrl, setIdCardUrl] = useState('')
@@ -50,14 +48,6 @@ export default function RegisterPage() {
   const hasNumber = /\d/.test(password)
   const isPasswordValid = hasMinLength && hasUppercase && hasLowercase && hasNumber
   const doPasswordsMatch = password.length > 0 && password === confirmPassword
-
-  const isFormComplete =
-    isNameValid &&
-    isEmailValid &&
-    isMobileValid &&
-    isPasswordValid &&
-    doPasswordsMatch &&
-    Boolean(idCardUrl)
 
   const handleIdCardUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -145,7 +135,6 @@ export default function RegisterPage() {
           email: email.trim(),
           mobileNumber: mobileNumber.trim(),
           city,
-          requestedRole,
           password,
           confirmPassword,
           idCardUrl,
@@ -178,7 +167,7 @@ export default function RegisterPage() {
           <div className="space-y-2">
             <h2 className="text-2xl font-bold text-zinc-900 dark:text-white tracking-tight">Application Submitted</h2>
             <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-sm mx-auto">
-              Your details and identity document have been submitted to the Super Admin queue for verification.
+              Your details and identity document have been submitted to the Super Admin queue for review and role assignment.
             </p>
           </div>
 
@@ -195,6 +184,12 @@ export default function RegisterPage() {
               <span className="text-zinc-500 dark:text-zinc-400">Assigned City:</span>
               <span className="font-semibold text-zinc-900 dark:text-zinc-100">{city}</span>
             </div>
+            <div className="flex justify-between py-1 border-b border-zinc-200 dark:border-zinc-800/80">
+              <span className="text-zinc-500 dark:text-zinc-400">Role Status:</span>
+              <span className="font-medium text-indigo-600 dark:text-indigo-400">
+                To be assigned by Super Admin
+              </span>
+            </div>
             <div className="flex justify-between py-1">
               <span className="text-zinc-500 dark:text-zinc-400">Review Status:</span>
               <span className="px-2 py-0.5 rounded-md bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 font-semibold border border-amber-200 dark:border-amber-800/50">
@@ -206,7 +201,7 @@ export default function RegisterPage() {
           <div className="p-4 bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800/80 rounded-xl text-xs text-zinc-600 dark:text-zinc-400 text-left flex gap-3 items-start">
             <ShieldCheck className="w-5 h-5 text-indigo-500 flex-shrink-0 mt-0.5" />
             <p className="leading-relaxed">
-              Dashboard credentials remain locked until the Super Admin confirms your ID document. You will receive an official notification once approved.
+              Dashboard credentials remain locked until the Super Admin confirms your ID document and assigns your operational role. You will receive an official notification once approved.
             </p>
           </div>
 
@@ -255,7 +250,7 @@ export default function RegisterPage() {
                   Staff & Volunteer Application
                 </h1>
                 <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
-                  Authorized portal for city moderators, content editors, and field volunteers.
+                  Registration for city moderators, content editors, and field volunteers.
                 </p>
               </div>
             </div>
@@ -278,13 +273,13 @@ export default function RegisterPage() {
 
           {/* Registration Form */}
           <form onSubmit={handleSubmit} autoComplete="off" className="mt-6 space-y-6">
-            {/* Section 1: Personal & Contact Information */}
+            {/* Section 1: Applicant & Placement Information */}
             <div className="space-y-4">
               <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
                 <span className="w-5 h-5 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-[10px] text-zinc-700 dark:text-zinc-300 font-semibold">
                   1
                 </span>
-                <span>Applicant Information</span>
+                <span>Applicant Information & City Placement</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -341,51 +336,40 @@ export default function RegisterPage() {
                     />
                   </div>
                 </div>
-              </div>
 
-              {/* Mobile Phone (Indian format) */}
-              <div>
-                <div className="flex justify-between items-center mb-1.5">
-                  <label className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
-                    Mobile Number (India Exclusive)
-                  </label>
-                  {mobileNumber && (
-                    <span className={`text-[11px] flex items-center gap-1 ${isMobileValid ? 'text-emerald-600 dark:text-emerald-400 font-medium' : 'text-rose-500'}`}>
-                      {isMobileValid ? <Check className="w-3 h-3" /> : '10 digits starting 6-9'}
-                    </span>
-                  )}
-                </div>
-                <div className="flex rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500 transition-colors">
-                  <div className="bg-zinc-100 dark:bg-zinc-800/90 px-3.5 py-2.5 flex items-center gap-1.5 border-r border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-200 text-xs font-semibold select-none">
-                    <span>🇮🇳</span>
-                    <span>+91</span>
+                {/* Mobile Phone (Indian format) */}
+                <div>
+                  <div className="flex justify-between items-center mb-1.5">
+                    <label className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+                      Mobile Number (India Exclusive)
+                    </label>
+                    {mobileNumber && (
+                      <span className={`text-[11px] flex items-center gap-1 ${isMobileValid ? 'text-emerald-600 dark:text-emerald-400 font-medium' : 'text-rose-500'}`}>
+                        {isMobileValid ? <Check className="w-3 h-3" /> : '10 digits starting 6-9'}
+                      </span>
+                    )}
                   </div>
-                  <input
-                    type="tel"
-                    name="staff_mobile"
-                    autoComplete="off"
-                    inputMode="numeric"
-                    required
-                    maxLength={10}
-                    placeholder="Enter 10-digit mobile number"
-                    value={mobileNumber}
-                    onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, ''))}
-                    className="w-full px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-900/80 text-xs sm:text-sm text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none"
-                  />
+                  <div className="flex rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500 transition-colors">
+                    <div className="bg-zinc-100 dark:bg-zinc-800/90 px-3.5 py-2.5 flex items-center gap-1.5 border-r border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-200 text-xs font-semibold select-none">
+                      <span>🇮🇳</span>
+                      <span>+91</span>
+                    </div>
+                    <input
+                      type="tel"
+                      name="staff_mobile"
+                      autoComplete="off"
+                      inputMode="numeric"
+                      required
+                      maxLength={10}
+                      placeholder="Enter 10-digit mobile number"
+                      value={mobileNumber}
+                      onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, ''))}
+                      className="w-full px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-900/80 text-xs sm:text-sm text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none"
+                    />
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            {/* Section 2: Regional Placement & Staff Role */}
-            <div className="space-y-4 pt-4 border-t border-zinc-100 dark:border-white/5">
-              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-                <span className="w-5 h-5 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-[10px] text-zinc-700 dark:text-zinc-300 font-semibold">
-                  2
-                </span>
-                <span>Role & Regional Placement</span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Primary Operational City */}
                 <div>
                   <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">
                     Primary Operational City
@@ -403,29 +387,21 @@ export default function RegisterPage() {
                     <option value="Mumbai">Mumbai</option>
                   </select>
                 </div>
+              </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">
-                    Requested Staff Role
-                  </label>
-                  <select
-                    value={requestedRole}
-                    onChange={(e) => setRequestedRole(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs sm:text-sm text-zinc-900 dark:text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors cursor-pointer"
-                  >
-                    <option value="volunteer">City Volunteer (Listings & Discovery)</option>
-                    <option value="moderator">Community & Housing Moderator</option>
-                    <option value="content_editor">Content & City Guide Editor</option>
-                  </select>
-                </div>
+              <div className="p-2.5 bg-zinc-50 dark:bg-zinc-900/40 rounded-xl border border-zinc-200/60 dark:border-zinc-800/60 text-[11px] text-zinc-500 dark:text-zinc-400 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 flex-shrink-0" />
+                <span>
+                  <strong>Role Assignment Policy:</strong> Specific operational roles (City Volunteer, Housing Moderator, or Guide Editor) are assigned directly by the Super Admin during identity review.
+                </span>
               </div>
             </div>
 
-            {/* Section 3: Credentials & Security */}
+            {/* Section 2: Credentials & Security */}
             <div className="space-y-4 pt-4 border-t border-zinc-100 dark:border-white/5">
               <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
                 <span className="w-5 h-5 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-[10px] text-zinc-700 dark:text-zinc-300 font-semibold">
-                  3
+                  2
                 </span>
                 <span>Security Credentials</span>
               </div>
@@ -524,12 +500,12 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Section 4: Identity Verification Document */}
+            {/* Section 3: Identity Verification Document */}
             <div className="space-y-4 pt-4 border-t border-zinc-100 dark:border-white/5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
                   <span className="w-5 h-5 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-[10px] text-zinc-700 dark:text-zinc-300 font-semibold">
-                    4
+                    3
                   </span>
                   <span>Proof of Identity</span>
                 </div>
@@ -600,16 +576,16 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Section 5: Governance Disclaimer & Action Buttons */}
+            {/* Section 4: Governance Disclaimer & Submit Button */}
             <div className="pt-6 border-t border-zinc-100 dark:border-white/5 space-y-4">
               <div className="p-3.5 bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl flex items-start gap-3 text-[11px] text-zinc-600 dark:text-zinc-400 leading-relaxed">
                 <ShieldCheck className="w-4 h-4 text-indigo-500 flex-shrink-0 mt-0.5" />
                 <span>
-                  <strong>Super Admin Governance Notice:</strong> By submitting, you acknowledge that all staff applications undergo cryptographic identity verification by the Super Admin before login permissions are granted.
+                  <strong>Super Admin Governance Notice:</strong> By submitting, you acknowledge that all staff applications undergo identity verification and role assignment by the Super Admin before login permissions are granted.
                 </span>
               </div>
 
-              {/* Submit Button - Guaranteed Visible, Prominent & High-Contrast */}
+              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={loading || uploadingImage}

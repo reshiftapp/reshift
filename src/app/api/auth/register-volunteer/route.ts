@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic'
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { fullName, email, mobileNumber, password, confirmPassword, idCardUrl, city, requestedRole } = body
+    const { fullName, email, mobileNumber, password, confirmPassword, idCardUrl, city } = body
 
     // 1. Name validation: alphabetic characters and spaces only
     const nameRegex = /^[a-zA-Z\s]{2,50}$/
@@ -87,7 +87,7 @@ export async function POST(request: Request) {
         idCardUrl: idCardUrl.trim(),
         id_card_url: idCardUrl.trim(),
         approval_status: 'pending',
-        requested_role: requestedRole || 'volunteer',
+        role: 'unassigned',
         city: city || 'Kochi',
       },
     })
