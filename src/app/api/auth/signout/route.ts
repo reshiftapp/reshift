@@ -24,7 +24,14 @@ export async function POST(request: Request) {
     // 1. Sign out on Supabase Auth server
     await supabase.auth.signOut()
 
-    // 2. Explicitly destroy all session cookies
+    // 2. Clear transient 2FA session cookie (leave 30-day trusted device token intact if configured)
+    try {
+      cookieStore.delete('reshift_2fa_session')
+    } catch {
+      cookieStore.set({ name: 'reshift_2fa_session', value: '', path: '/', maxAge: 0 })
+    }
+
+    // 3. Explicitly destroy all session cookies
     const allCookies = cookieStore.getAll()
     allCookies.forEach((cookie) => {
       if (

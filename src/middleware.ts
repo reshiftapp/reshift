@@ -1,5 +1,10 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
+import {
+  TRUSTED_DEVICE_COOKIE_NAME,
+  SESSION_2FA_COOKIE_NAME,
+  verifyDeviceTrustToken,
+} from '@/lib/auth/tokens'
 
 // Routes that do NOT require authentication
 const PUBLIC_FILE_EXTENSIONS = [
@@ -97,6 +102,36 @@ export async function middleware(request: NextRequest) {
     if (!isPublicPage) {
       const loginUrl = new URL('/login', request.url)
       loginUrl.searchParams.set('error', 'unauthorized')
+      return NextResponse.redirect(loginUrl)
+    }
+  }
+
+  // 5b. Super Admin Two-Factor Authentication & 30-Day Trusted Device Check
+  // Super Admin MUST complete 2FA unless this device is trusted (30-day cookie) or has an active 2FA session
+  if (isSuperAdmin && !isPublicPage) {
+    const trustToken = request.cookies.get(TRUSTED_DEVICE_COOKIE_NAME)?.value
+    const sessionToken = request.cookies.get(SESSION_2FA_COOKIE_NAME)?.value
+
+    let is2FAValid = false
+    if (trustToken) {
+      is2FAValid = await verifyDeviceTrustToken(trustToken, user.id)
+    }
+    if (!is2FAValid && sessionToken) {
+      is2FAValid = await verifyDeviceTrustToken(sessionToken, user.id)
+    }
+
+    if (!is2FAValid) {
+      if (pathname.startsWith('/api/')) {
+        return NextResponse.json(
+          { success: false, message: 'Two-factor authentication required.' },
+          { status: 401 }
+        )
+      }
+      const loginUrl = new URL('/login', request.url)
+      loginUrl.searchParams.set('step', '2fa')
+      if (pathname !== '/') {
+        loginUrl.searchParams.set('redirect', pathname)
+      }
       return NextResponse.redirect(loginUrl)
     }
   }

@@ -214,3 +214,94 @@ export async function sendRejectionEmail({
     return { success: false, error: err.message }
   }
 }
+
+export async function sendSuperAdmin2FAEmail({
+  toEmail,
+  otpCode,
+}: {
+  toEmail: string
+  otpCode: string
+}): Promise<BrevoSendResult> {
+  const apiKey = process.env.BREVO_API_KEY?.trim()
+  const senderEmail = process.env.BREVO_SENDER_EMAIL?.trim() || 'reshiftapp@gmail.com'
+  const senderName = process.env.BREVO_SENDER_NAME?.trim() || 'ReShift Root Security'
+
+  if (!apiKey || apiKey === '' || apiKey.includes('your_brevo')) {
+    console.log(`\n======================================================`)
+    console.log(`[BREVO EMAIL SERVICE — SUPER ADMIN 2FA OTP]`)
+    console.log(`To: ${toEmail}`)
+    console.log(`Super Admin Two-Factor Code: [ ${otpCode} ]`)
+    console.log(`Valid for 10 minutes.`)
+    console.log(`======================================================\n`)
+    return { success: true, simulated: true }
+  }
+
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #09090b; color: #f4f4f5; margin: 0; padding: 24px; }
+          .container { max-width: 520px; margin: 0 auto; background-color: #111113; border-radius: 16px; border: 1px solid #27272a; padding: 36px 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+          .logo { font-size: 22px; font-weight: 800; color: #6366f1; letter-spacing: -0.5px; margin-bottom: 20px; }
+          .badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; background: rgba(99,102,241,0.15); color: #818cf8; border: 1px solid rgba(99,102,241,0.3); text-transform: uppercase; margin-bottom: 16px; }
+          .title { font-size: 20px; font-weight: 700; color: #ffffff; margin-bottom: 10px; }
+          .desc { font-size: 13px; line-height: 1.6; color: #a1a1aa; margin-bottom: 24px; }
+          .otp-card { background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.4); border-radius: 12px; padding: 24px 20px; text-align: center; margin-bottom: 24px; }
+          .otp-code { font-size: 38px; font-weight: 800; letter-spacing: 10px; color: #ffffff; margin: 0; font-family: 'Courier New', Courier, monospace; }
+          .expiry { font-size: 11px; color: #818cf8; margin-top: 10px; font-weight: 600; }
+          .alert { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 8px; padding: 12px; font-size: 12px; color: #fca5a5; line-height: 1.5; margin-bottom: 20px; }
+          .footer { font-size: 11px; color: #71717a; text-align: center; border-top: 1px solid #27272a; padding-top: 20px; margin-top: 24px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="logo">ReShift</div>
+          <div class="badge">Root Governance Two-Factor Authentication</div>
+          <div class="title">Super Admin Sign-In Verification</div>
+          <p class="desc">A sign-in attempt was initiated for the root Super Administrator account (<strong>${toEmail}</strong>). Please enter the following single-use verification code to authenticate your session:</p>
+          <div class="otp-card">
+            <div class="otp-code">${otpCode}</div>
+            <div class="expiry">Expires in 10 minutes • Do not disclose to anyone</div>
+          </div>
+          <div class="alert">
+            <strong>Security Notice:</strong> If you did not initiate this login attempt, your password may be compromised. Please revoke all active sessions and change your root administrator password immediately.
+          </div>
+          <div class="footer">
+            © ${new Date().getFullYear()} ReShift Inc. Cryptographic Security Service.
+          </div>
+        </div>
+      </body>
+    </html>
+  `
+
+  try {
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'api-key': apiKey,
+      },
+      body: JSON.stringify({
+        sender: { name: senderName, email: senderEmail },
+        to: [{ email: toEmail, name: 'ReShift Super Admin' }],
+        subject: `[ReShift Security] ${otpCode} is your Super Admin 2FA Code`,
+        htmlContent,
+      }),
+    })
+
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}))
+      console.error('Brevo API error for 2FA:', errData)
+      return { success: false, error: errData?.message || 'Failed to dispatch 2FA email' }
+    }
+
+    const resData = await response.json()
+    return { success: true, messageId: resData?.messageId }
+  } catch (err: any) {
+    console.error('Brevo 2FA dispatch exception:', err)
+    return { success: false, error: err.message || 'Network error communicating with Brevo' }
+  }
+}
