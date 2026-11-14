@@ -117,8 +117,9 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/', request.url))
   }
 
-  // 7. If logged-in authorized staff/admin tries to visit /login or /register, redirect to dashboard
-  if (isPublicPage && (isSuperAdmin || isApprovedStaff)) {
+  // 7. If logged-in authorized staff/admin tries to visit /register, redirect to dashboard.
+  // /login is intentionally permitted so users can view active session status or sign out cleanly.
+  if (pathname === '/register' && (isSuperAdmin || isApprovedStaff)) {
     return NextResponse.redirect(new URL('/', request.url))
   }
 

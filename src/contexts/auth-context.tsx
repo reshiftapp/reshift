@@ -66,11 +66,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     : meta.role || meta.requested_role || (isStaff ? 'volunteer' : 'customer')
 
   const signOut = async () => {
-    const supabase = createClient()
-    await supabase.auth.signOut()
-    setUser(null)
-    router.push('/login')
-    router.refresh()
+    try {
+      const supabase = createClient()
+      await supabase.auth.signOut()
+      await fetch('/api/auth/signout', { method: 'POST' })
+    } catch (e) {
+      console.error('Sign out error:', e)
+    } finally {
+      setUser(null)
+      window.location.href = '/login'
+    }
   }
 
   return (

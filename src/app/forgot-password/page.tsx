@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
+import { ThemeToggle } from '@/components/layout/theme-toggle'
 import {
   Mail,
   KeyRound,
@@ -133,19 +134,26 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden">
-      <div className="w-full max-w-md space-y-8 relative z-10">
+    <div className="min-h-screen bg-zinc-50 dark:bg-[#09090b] flex flex-col justify-between px-4 sm:px-6 lg:px-8 py-6 relative overflow-hidden transition-colors">
+      {/* Top Header with Brand and Tactile Theme Toggle */}
+      <header className="w-full max-w-md mx-auto flex items-center justify-between z-20">
+        <Link href="/login" className="flex items-center gap-2">
+          <div className="w-7 h-7 rounded-lg overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-2xs">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/reshift-icon.png" alt="ReShift Logo" className="w-full h-full object-cover" />
+          </div>
+          <span className="font-semibold text-xs tracking-tight text-zinc-900 dark:text-white">
+            ReShift <span className="text-zinc-500 dark:text-zinc-400 font-normal">| Password Recovery</span>
+          </span>
+        </Link>
+        <ThemeToggle />
+      </header>
+
+      <div className="w-full max-w-md mx-auto my-6 space-y-6 relative z-10">
         {/* Brand Header */}
         <div className="text-center">
-          <Link href="/login" className="inline-flex items-center gap-2 mb-3">
-            <div className="w-10 h-10 rounded-xl overflow-hidden shadow-md shadow-indigo-500/20 border border-slate-800">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/reshift-icon.png" alt="ReShift Logo" className="w-full h-full object-cover" />
-            </div>
-            <span className="font-bold text-white text-lg">ReShift</span>
-          </Link>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Password Recovery</h1>
-          <p className="mt-1 text-sm text-slate-400">
+          <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white">Password Recovery</h1>
+          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
             {step === 1 && 'Enter your account email to receive a 6-digit Brevo OTP.'}
             {step === 2 && 'Enter the 6-digit verification code sent to your email.'}
             {step === 3 && 'Choose a strong new password for your account.'}
@@ -154,7 +162,7 @@ export default function ForgotPasswordPage() {
         </div>
 
         {/* Card */}
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl space-y-6">
+        <div className="bg-white dark:bg-[#111113] border border-zinc-200 dark:border-white/10 rounded-2xl p-7 shadow-sm space-y-6 transition-colors">
           {/* Progress Indicators */}
           {step < 4 && (
             <div className="flex items-center justify-between pb-4 border-b border-slate-800">
