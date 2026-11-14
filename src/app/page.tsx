@@ -96,10 +96,10 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* Header with Quick Actions */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
         <div>
-          <h1 className="text-2xl font-black text-white tracking-tight">System Overview</h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <h1 className="text-2xl font-semibold text-zinc-900 dark:text-white tracking-tight">System Overview</h1>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
             Real-time control metrics synchronized with the Reshift mobile app.
           </p>
         </div>

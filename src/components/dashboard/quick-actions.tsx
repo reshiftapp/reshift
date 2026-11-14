@@ -10,39 +10,39 @@ export function QuickActions() {
       label: 'Add Property',
       href: '/housing',
       icon: Home,
-      color: 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-indigo-600/30',
+      accent: 'text-indigo-600 dark:text-indigo-400',
     },
     {
       label: 'Add Event',
       href: '/events',
       icon: Calendar,
-      color: 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-600/30',
+      accent: 'text-emerald-600 dark:text-emerald-400',
     },
     {
       label: 'Add Food Spot',
       href: '/food',
       icon: UtensilsCrossed,
-      color: 'bg-amber-600 hover:bg-amber-500 text-white shadow-amber-600/30',
+      accent: 'text-amber-600 dark:text-amber-400',
     },
     {
       label: 'Send Broadcast',
       href: '/notifications',
       icon: Bell,
-      color: 'bg-rose-600 hover:bg-rose-500 text-white shadow-rose-600/30',
+      accent: 'text-rose-600 dark:text-rose-400',
     },
   ]
 
   return (
-    <div className="flex flex-wrap items-center gap-3">
+    <div className="flex flex-wrap items-center gap-2">
       {actions.map((act) => {
         const Icon = act.icon
         return (
           <Link
             key={act.label}
             href={act.href}
-            className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold shadow-md transition-all hover:scale-[1.02] ${act.color}`}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/90 text-zinc-800 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800/70 shadow-2xs transition-all hover:border-zinc-300 dark:hover:border-zinc-700"
           >
-            <Icon className="w-4 h-4" />
+            <Icon className={`w-3.5 h-3.5 ${act.accent}`} />
             <span>{act.label}</span>
           </Link>
         )

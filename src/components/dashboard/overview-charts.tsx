@@ -1,6 +1,7 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useTheme } from 'next-themes'
 import {
   LineChart,
   Line,
@@ -23,23 +24,42 @@ interface OverviewChartsProps {
   roleDistribution: { role: string; count: number }[]
 }
 
-const COLORS = ['#5B6FD0', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6']
+const COLORS = ['#6366f1', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6']
 
 export function OverviewCharts({
   registrationTrends,
   categoryDistribution,
   roleDistribution,
 }: OverviewChartsProps) {
+  const { resolvedTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const isDark = mounted ? resolvedTheme === 'dark' : true
+  const gridStroke = isDark ? '#27272a' : '#e4e4e7'
+  const textStroke = isDark ? '#71717a' : '#a1a1aa'
+  const tooltipStyle = {
+    backgroundColor: isDark ? '#111113' : '#ffffff',
+    borderColor: isDark ? '#27272a' : '#e4e4e7',
+    borderRadius: '8px',
+    color: isDark ? '#f4f4f5' : '#09090b',
+    fontSize: '12px',
+    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+  }
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mt-5">
       {/* 30-Day User Registrations Trend */}
-      <div className="lg:col-span-2 rounded-2xl bg-slate-900/90 border border-slate-800 p-6 shadow-lg shadow-black/20">
-        <div className="flex items-center justify-between mb-6">
+      <div className="lg:col-span-2 rounded-xl bg-white dark:bg-[#111113] border border-zinc-200 dark:border-white/10 p-5 shadow-2xs">
+        <div className="flex items-center justify-between mb-5">
           <div>
-            <h4 className="text-base font-semibold text-white">User Registrations Trend</h4>
-            <p className="text-xs text-slate-400 mt-0.5">Real-time daily incoming user signups</p>
+            <h4 className="text-sm font-semibold text-zinc-900 dark:text-white">User Registrations Trend</h4>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Real-time daily incoming customer signups</p>
           </div>
-          <span className="px-2.5 py-1 rounded-full text-[11px] font-medium bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+          <span className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-200/60 dark:border-indigo-800/40">
             Live Database
           </span>
         </div>
@@ -48,30 +68,22 @@ export function OverviewCharts({
           {registrationTrends.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={registrationTrends}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                <XAxis dataKey="date" stroke="#64748b" fontSize={11} tickLine={false} />
-                <YAxis stroke="#64748b" fontSize={11} tickLine={false} allowDecimals={false} />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: '#0f172a',
-                    borderColor: '#334155',
-                    borderRadius: '8px',
-                    color: '#f8fafc',
-                    fontSize: '12px',
-                  }}
-                />
+                <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} />
+                <XAxis dataKey="date" stroke={textStroke} fontSize={11} tickLine={false} />
+                <YAxis stroke={textStroke} fontSize={11} tickLine={false} allowDecimals={false} />
+                <Tooltip contentStyle={tooltipStyle} />
                 <Line
                   type="monotone"
                   dataKey="users"
-                  stroke="#5B6FD0"
-                  strokeWidth={2.5}
-                  dot={{ fill: '#5B6FD0', r: 4 }}
-                  activeDot={{ r: 6 }}
+                  stroke="#6366f1"
+                  strokeWidth={2}
+                  dot={{ fill: '#6366f1', r: 3.5 }}
+                  activeDot={{ r: 5 }}
                 />
               </LineChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-full flex items-center justify-center text-xs text-slate-500">
+            <div className="h-full flex items-center justify-center text-xs text-zinc-400 dark:text-zinc-500">
               No registration history available yet.
             </div>
           )}
@@ -79,12 +91,12 @@ export function OverviewCharts({
       </div>
 
       {/* User Demographic Roles Breakdown */}
-      <div className="rounded-2xl bg-slate-900/90 border border-slate-800 p-6 shadow-lg shadow-black/20 flex flex-col justify-between">
+      <div className="rounded-xl bg-white dark:bg-[#111113] border border-zinc-200 dark:border-white/10 p-5 shadow-2xs flex flex-col justify-between">
         <div>
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h4 className="text-base font-semibold text-white">User Demographics</h4>
-              <p className="text-xs text-slate-400 mt-0.5">Distribution by profile role</p>
+              <h4 className="text-sm font-semibold text-zinc-900 dark:text-white">User Demographics</h4>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Distribution by profile role</p>
             </div>
           </div>
 
@@ -106,44 +118,36 @@ export function OverviewCharts({
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: '#0f172a',
-                      borderColor: '#334155',
-                      borderRadius: '8px',
-                      color: '#f8fafc',
-                      fontSize: '12px',
-                    }}
-                  />
+                  <Tooltip contentStyle={tooltipStyle} />
                   <Legend
                     verticalAlign="bottom"
                     iconType="circle"
-                    formatter={(value) => <span className="text-xs text-slate-300">{value}</span>}
+                    formatter={(value) => <span className="text-xs text-zinc-700 dark:text-zinc-300">{value}</span>}
                   />
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-full flex items-center justify-center text-xs text-slate-500">
+              <div className="h-full flex items-center justify-center text-xs text-zinc-400 dark:text-zinc-500">
                 No user profiles recorded yet.
               </div>
             )}
           </div>
         </div>
 
-        <div className="pt-4 border-t border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
+        <div className="pt-3 border-t border-zinc-100 dark:border-zinc-800/80 text-[11px] text-zinc-500 dark:text-zinc-400 flex items-center justify-between">
           <span>Active Mobile Users</span>
-          <span className="font-semibold text-white">
+          <span className="font-semibold text-zinc-900 dark:text-white">
             {roleDistribution.reduce((acc, curr) => acc + curr.count, 0)} Total
           </span>
         </div>
       </div>
 
       {/* Posts by Category Bar Chart */}
-      <div className="lg:col-span-3 rounded-2xl bg-slate-900/90 border border-slate-800 p-6 shadow-lg shadow-black/20">
-        <div className="flex items-center justify-between mb-6">
+      <div className="lg:col-span-3 rounded-xl bg-white dark:bg-[#111113] border border-zinc-200 dark:border-white/10 p-5 shadow-2xs">
+        <div className="flex items-center justify-between mb-5">
           <div>
-            <h4 className="text-base font-semibold text-white">Community Engagement by Category</h4>
-            <p className="text-xs text-slate-400 mt-0.5">Breakdown of user discussions and posts</p>
+            <h4 className="text-sm font-semibold text-zinc-900 dark:text-white">Community Engagement by Category</h4>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Breakdown of user discussions and posts</p>
           </div>
         </div>
 
@@ -151,23 +155,15 @@ export function OverviewCharts({
           {categoryDistribution.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={categoryDistribution}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                <XAxis dataKey="category" stroke="#64748b" fontSize={11} tickLine={false} />
-                <YAxis stroke="#64748b" fontSize={11} tickLine={false} allowDecimals={false} />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: '#0f172a',
-                    borderColor: '#334155',
-                    borderRadius: '8px',
-                    color: '#f8fafc',
-                    fontSize: '12px',
-                  }}
-                />
-                <Bar dataKey="count" fill="#5B6FD0" radius={[6, 6, 0, 0]} maxBarSize={50} />
+                <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} />
+                <XAxis dataKey="category" stroke={textStroke} fontSize={11} tickLine={false} />
+                <YAxis stroke={textStroke} fontSize={11} tickLine={false} allowDecimals={false} />
+                <Tooltip contentStyle={tooltipStyle} />
+                <Bar dataKey="count" fill="#6366f1" radius={[4, 4, 0, 0]} maxBarSize={44} />
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-full flex items-center justify-center text-xs text-slate-500">
+            <div className="h-full flex items-center justify-center text-xs text-zinc-400 dark:text-zinc-500">
               No community posts recorded yet.
             </div>
           )}

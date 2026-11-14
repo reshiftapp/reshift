@@ -121,103 +121,103 @@ export default function ApprovalsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold tracking-tight text-white">Staff & Volunteer Approvals</h1>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+            <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-white">Staff & Volunteer Approvals</h1>
+            <span className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-200/60 dark:border-indigo-800/40">
               Super Admin Control
             </span>
           </div>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
             Verify official company ID cards and grant dashboard operational privileges to applicant staff
           </p>
         </div>
 
         <button
           onClick={() => refetch()}
-          className="self-start sm:self-auto px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium rounded-xl border border-slate-700 transition-colors flex items-center gap-2 cursor-pointer"
+          className="self-start sm:self-auto px-3 py-1.5 bg-zinc-100 hover:bg-zinc-200/80 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 text-xs font-medium rounded-lg border border-zinc-200/80 dark:border-zinc-700/60 transition-colors flex items-center gap-2 cursor-pointer shadow-2xs"
         >
           <span>Refresh Queue</span>
         </button>
       </div>
 
       {/* Metric Tabs */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <button
           onClick={() => setActiveTab('pending')}
-          className={`p-4 rounded-2xl border text-left transition-all cursor-pointer ${
+          className={`p-4 rounded-xl border text-left transition-all cursor-pointer ${
             activeTab === 'pending'
-              ? 'bg-amber-500/10 border-amber-500/40 shadow-lg shadow-amber-500/10'
-              : 'bg-slate-900 border-slate-800 hover:bg-slate-850'
+              ? 'bg-amber-50/60 dark:bg-amber-950/20 border-amber-300 dark:border-amber-700/60 shadow-2xs'
+              : 'bg-white dark:bg-[#111113] border-zinc-200 dark:border-white/10 hover:border-zinc-300 dark:hover:border-zinc-700'
           }`}
         >
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-medium text-slate-400">Pending Review</span>
-            <Clock className={`w-4 h-4 ${activeTab === 'pending' ? 'text-amber-400' : 'text-slate-500'}`} />
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Pending Review</span>
+            <Clock className={`w-4 h-4 ${activeTab === 'pending' ? 'text-amber-500 dark:text-amber-400' : 'text-zinc-400 dark:text-zinc-500'}`} />
           </div>
-          <div className="text-2xl font-bold text-white">{pendingCount}</div>
-          <p className="text-[11px] text-amber-400/80 mt-1">Requires ID verification</p>
+          <div className="text-2xl font-bold text-zinc-900 dark:text-white">{pendingCount}</div>
+          <p className="text-[11px] text-amber-600 dark:text-amber-400 mt-0.5">Requires ID verification</p>
         </button>
 
         <button
           onClick={() => setActiveTab('approved')}
-          className={`p-4 rounded-2xl border text-left transition-all cursor-pointer ${
+          className={`p-4 rounded-xl border text-left transition-all cursor-pointer ${
             activeTab === 'approved'
-              ? 'bg-emerald-500/10 border-emerald-500/40 shadow-lg shadow-emerald-500/10'
-              : 'bg-slate-900 border-slate-800 hover:bg-slate-850'
+              ? 'bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-700/60 shadow-2xs'
+              : 'bg-white dark:bg-[#111113] border-zinc-200 dark:border-white/10 hover:border-zinc-300 dark:hover:border-zinc-700'
           }`}
         >
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-medium text-slate-400">Active Staff</span>
-            <UserCheck className={`w-4 h-4 ${activeTab === 'approved' ? 'text-emerald-400' : 'text-slate-500'}`} />
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Active Staff</span>
+            <UserCheck className={`w-4 h-4 ${activeTab === 'approved' ? 'text-emerald-500 dark:text-emerald-400' : 'text-zinc-400 dark:text-zinc-500'}`} />
           </div>
-          <div className="text-2xl font-bold text-white">{approvedCount}</div>
-          <p className="text-[11px] text-emerald-400/80 mt-1">Verified & active</p>
+          <div className="text-2xl font-bold text-zinc-900 dark:text-white">{approvedCount}</div>
+          <p className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-0.5">Verified & active</p>
         </button>
 
         <button
           onClick={() => setActiveTab('rejected')}
-          className={`p-4 rounded-2xl border text-left transition-all cursor-pointer ${
+          className={`p-4 rounded-xl border text-left transition-all cursor-pointer ${
             activeTab === 'rejected'
-              ? 'bg-red-500/10 border-red-500/40 shadow-lg shadow-red-500/10'
-              : 'bg-slate-900 border-slate-800 hover:bg-slate-850'
+              ? 'bg-rose-50/60 dark:bg-rose-950/20 border-rose-300 dark:border-rose-700/60 shadow-2xs'
+              : 'bg-white dark:bg-[#111113] border-zinc-200 dark:border-white/10 hover:border-zinc-300 dark:hover:border-zinc-700'
           }`}
         >
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-medium text-slate-400">Rejected Applications</span>
-            <UserX className={`w-4 h-4 ${activeTab === 'rejected' ? 'text-red-400' : 'text-slate-500'}`} />
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Rejected Applications</span>
+            <UserX className={`w-4 h-4 ${activeTab === 'rejected' ? 'text-rose-500 dark:text-rose-400' : 'text-zinc-400 dark:text-zinc-500'}`} />
           </div>
-          <div className="text-2xl font-bold text-white">{rejectedCount}</div>
-          <p className="text-[11px] text-red-400/80 mt-1">Denied login access</p>
+          <div className="text-2xl font-bold text-zinc-900 dark:text-white">{rejectedCount}</div>
+          <p className="text-[11px] text-rose-600 dark:text-rose-400 mt-0.5">Denied login access</p>
         </button>
       </div>
 
       {/* Search Bar */}
       <div className="relative">
-        <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+        <Search className="w-3.5 h-3.5 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
         <input
           type="text"
           placeholder="Search by name, email, phone (+91), or city..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="w-full pl-9 pr-3.5 py-2 bg-white dark:bg-[#111113] border border-zinc-200 dark:border-white/10 rounded-xl text-xs text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors shadow-2xs"
         />
       </div>
 
       {/* Applications List */}
       {isLoading ? (
-        <div className="h-64 flex items-center justify-center bg-slate-900 border border-slate-800 rounded-2xl">
-          <Loader2 className="w-6 h-6 text-indigo-400 animate-spin" />
+        <div className="h-64 flex items-center justify-center bg-white dark:bg-[#111113] border border-zinc-200 dark:border-white/10 rounded-xl">
+          <Loader2 className="w-5 h-5 text-indigo-500 animate-spin" />
         </div>
       ) : filteredApps.length === 0 ? (
-        <div className="p-12 text-center bg-slate-900 border border-slate-800 rounded-2xl space-y-3">
-          <ShieldCheck className="w-10 h-10 text-slate-600 mx-auto" />
-          <h3 className="text-base font-semibold text-white">
+        <div className="p-12 text-center bg-white dark:bg-[#111113] border border-zinc-200 dark:border-white/10 rounded-xl space-y-2.5">
+          <ShieldCheck className="w-8 h-8 text-zinc-400 dark:text-zinc-600 mx-auto" />
+          <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
             {activeTab === 'pending'
               ? 'No pending staff applications'
               : activeTab === 'approved'
               ? 'No active staff appointed yet'
               : 'No rejected staff applications'}
           </h3>
-          <p className="text-xs text-slate-400 max-w-md mx-auto">
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-md mx-auto">
             {activeTab === 'pending'
               ? 'When volunteers or moderators register through the staff portal, their applications and company ID photos will appear here for Super Admin verification.'
               : activeTab === 'approved'
@@ -230,25 +230,25 @@ export default function ApprovalsPage() {
           {filteredApps.map((app) => (
             <div
               key={app.id}
-              className="bg-slate-900 border border-slate-800 hover:border-slate-700/80 rounded-2xl p-5 shadow-lg flex flex-col justify-between space-y-4 transition-all"
+              className="bg-white dark:bg-[#111113] border border-zinc-200 dark:border-white/10 hover:border-zinc-300 dark:hover:border-zinc-700 rounded-xl p-4.5 shadow-2xs flex flex-col justify-between space-y-3.5 transition-all"
             >
               <div className="space-y-3">
                 {/* Header */}
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <h3 className="font-semibold text-white text-base leading-tight">{app.fullName}</h3>
-                    <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-1">
-                      <Mail className="w-3.5 h-3.5 text-slate-500" />
+                    <h3 className="font-medium text-zinc-900 dark:text-white text-sm leading-tight">{app.fullName}</h3>
+                    <div className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                      <Mail className="w-3.5 h-3.5 text-zinc-400" />
                       <span className="truncate max-w-[180px]">{app.email}</span>
                     </div>
                   </div>
                   <span
-                    className={`px-2 py-0.5 rounded-full text-[11px] font-semibold border ${
+                    className={`px-2 py-0.5 rounded-md text-[10px] font-medium border ${
                       app.approvalStatus === 'pending'
-                        ? 'bg-amber-500/10 text-amber-300 border-amber-500/30'
+                        ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border-amber-200/60 dark:border-amber-800/40'
                         : app.approvalStatus === 'approved'
-                        ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
-                        : 'bg-red-500/10 text-red-300 border-red-500/30'
+                        ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border-emerald-200/60 dark:border-emerald-800/40'
+                        : 'bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border-rose-200/60 dark:border-rose-800/40'
                     }`}
                   >
                     {app.approvalStatus === 'pending' ? 'Pending' : app.approvalStatus === 'approved' ? 'Approved' : 'Rejected'}
@@ -256,30 +256,30 @@ export default function ApprovalsPage() {
                 </div>
 
                 {/* Details Grid */}
-                <div className="p-3 bg-slate-850 rounded-xl space-y-2 text-xs border border-slate-800/80">
+                <div className="p-3 bg-zinc-50 dark:bg-zinc-900/60 rounded-lg space-y-1.5 text-xs border border-zinc-100 dark:border-zinc-800/60">
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-500 flex items-center gap-1.5">
-                      <Phone className="w-3.5 h-3.5 text-slate-400" /> Mobile:
+                    <span className="text-zinc-500 dark:text-zinc-400 flex items-center gap-1.5">
+                      <Phone className="w-3.5 h-3.5 text-zinc-400" /> Mobile:
                     </span>
-                    <span className="font-medium text-slate-200">+91 {app.mobileNumber}</span>
+                    <span className="font-medium text-zinc-800 dark:text-zinc-200">+91 {app.mobileNumber}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-500 flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-slate-400" /> City:
+                    <span className="text-zinc-500 dark:text-zinc-400 flex items-center gap-1.5">
+                      <MapPin className="w-3.5 h-3.5 text-zinc-400" /> City:
                     </span>
-                    <span className="font-medium text-slate-200">{app.city}</span>
+                    <span className="font-medium text-zinc-800 dark:text-zinc-200">{app.city}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-500 flex items-center gap-1.5">
-                      <Sparkles className="w-3.5 h-3.5 text-slate-400" /> Assigned / Req:
+                    <span className="text-zinc-500 dark:text-zinc-400 flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-zinc-400" /> Assigned:
                     </span>
-                    <span className="font-medium text-indigo-400 capitalize">{app.role}</span>
+                    <span className="font-medium text-indigo-600 dark:text-indigo-400 capitalize">{app.role}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-500 flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-slate-400" /> Applied:
+                    <span className="text-zinc-500 dark:text-zinc-400 flex items-center gap-1.5">
+                      <Calendar className="w-3.5 h-3.5 text-zinc-400" /> Applied:
                     </span>
-                    <span className="text-slate-400 text-[11px]">
+                    <span className="text-zinc-500 dark:text-zinc-400 text-[11px]">
                       {new Date(app.createdAt).toLocaleDateString('en-IN', {
                         day: 'numeric',
                         month: 'short',
@@ -291,18 +291,18 @@ export default function ApprovalsPage() {
 
                 {/* Rejection reason if present */}
                 {app.rejectionReason && (
-                  <div className="p-2.5 bg-red-500/10 border border-red-500/20 rounded-xl text-[11px] text-red-300">
+                  <div className="p-2.5 bg-rose-50 dark:bg-rose-950/30 border border-rose-200/60 dark:border-rose-800/40 rounded-lg text-xs text-rose-600 dark:text-rose-400">
                     <strong>Rejection Reason:</strong> {app.rejectionReason}
                   </div>
                 )}
 
                 {/* Company ID Card Preview */}
                 <div>
-                  <span className="text-[11px] font-medium text-slate-400 block mb-1.5">Company ID Document:</span>
+                  <span className="text-[11px] font-medium text-zinc-500 dark:text-zinc-400 block mb-1.5">Company ID Document:</span>
                   {app.idCardUrl ? (
                     <div
                       onClick={() => setInspectImageModal(app.idCardUrl)}
-                      className="w-full h-28 rounded-xl overflow-hidden bg-slate-950 border border-slate-800 relative group cursor-pointer"
+                      className="w-full h-28 rounded-lg overflow-hidden bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 relative group cursor-pointer"
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
@@ -310,13 +310,13 @@ export default function ApprovalsPage() {
                         alt="Company ID Card"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                       />
-                      <div className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-1.5 text-xs font-semibold text-white transition-opacity">
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-1.5 text-xs font-medium text-white transition-opacity">
                         <Eye className="w-4 h-4" />
-                        <span>Inspect Full Photo</span>
+                        <span>Inspect Photo</span>
                       </div>
                     </div>
                   ) : (
-                    <div className="w-full h-20 rounded-xl bg-slate-800/40 border border-slate-800 flex items-center justify-center text-xs text-slate-500">
+                    <div className="w-full h-20 rounded-lg bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-xs text-zinc-400">
                       No ID photo uploaded
                     </div>
                   )}
@@ -324,7 +324,7 @@ export default function ApprovalsPage() {
               </div>
 
               {/* Action Buttons */}
-              <div className="pt-2 border-t border-slate-800 flex items-center gap-2">
+              <div className="pt-2.5 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center gap-2">
                 {app.approvalStatus === 'pending' ? (
                   <>
                     <button
@@ -332,7 +332,7 @@ export default function ApprovalsPage() {
                         setApproveModalApp(app)
                         setAssignedRole((app.role as any) || 'moderator')
                       }}
-                      className="flex-1 py-2 px-3 bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs rounded-xl flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                      className="flex-1 py-1.5 px-3 bg-zinc-900 hover:bg-zinc-800 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-medium text-xs rounded-lg flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
                     >
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       <span>Approve</span>
@@ -341,7 +341,7 @@ export default function ApprovalsPage() {
                       onClick={() => {
                         setRejectModalApp(app)
                       }}
-                      className="flex-1 py-2 px-3 bg-slate-800 hover:bg-red-500/20 text-slate-300 hover:text-red-300 font-medium text-xs rounded-xl border border-slate-700 hover:border-red-500/40 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                      className="flex-1 py-1.5 px-3 bg-zinc-100 hover:bg-rose-50 dark:bg-zinc-800 dark:hover:bg-rose-950/40 text-zinc-700 hover:text-rose-600 dark:text-zinc-300 dark:hover:text-rose-400 font-medium text-xs rounded-lg border border-zinc-200 dark:border-zinc-700 hover:border-rose-200 dark:hover:border-rose-800 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
                     >
                       <XCircle className="w-3.5 h-3.5" />
                       <span>Reject</span>
@@ -350,7 +350,7 @@ export default function ApprovalsPage() {
                 ) : app.approvalStatus === 'approved' ? (
                   <button
                     onClick={() => setRejectModalApp(app)}
-                    className="w-full py-2 px-3 bg-slate-800 hover:bg-red-500/20 text-slate-400 hover:text-red-300 text-xs rounded-xl border border-slate-700/60 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                    className="w-full py-1.5 px-3 bg-zinc-100 hover:bg-rose-50 dark:bg-zinc-800 dark:hover:bg-rose-950/40 text-zinc-600 hover:text-rose-600 dark:text-zinc-400 dark:hover:text-rose-400 text-xs rounded-lg border border-zinc-200 dark:border-zinc-700/60 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     <UserX className="w-3.5 h-3.5" />
                     <span>Revoke Access</span>
@@ -361,7 +361,7 @@ export default function ApprovalsPage() {
                       setApproveModalApp(app)
                       setAssignedRole('moderator')
                     }}
-                    className="w-full py-2 px-3 bg-slate-800 hover:bg-emerald-500/20 text-slate-400 hover:text-emerald-300 text-xs rounded-xl border border-slate-700/60 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                    className="w-full py-1.5 px-3 bg-zinc-100 hover:bg-emerald-50 dark:bg-zinc-800 dark:hover:bg-emerald-950/40 text-zinc-600 hover:text-emerald-600 dark:text-zinc-400 dark:hover:text-emerald-400 text-xs rounded-lg border border-zinc-200 dark:border-zinc-700/60 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     <UserCheck className="w-3.5 h-3.5" />
                     <span>Re-evaluate & Approve</span>
@@ -375,19 +375,19 @@ export default function ApprovalsPage() {
 
       {/* LIGHTBOX MODAL: Inspect ID Card */}
       {inspectImageModal && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-2xl w-full p-6 shadow-2xl relative space-y-4">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#111113] border border-zinc-200 dark:border-white/10 rounded-2xl max-w-2xl w-full p-5 shadow-2xl relative space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="font-bold text-white text-base">Official ID Card Inspection</h3>
+              <h3 className="font-semibold text-zinc-900 dark:text-white text-sm">Official ID Card Inspection</h3>
               <button
                 onClick={() => setInspectImageModal(null)}
-                className="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center cursor-pointer"
+                className="w-7 h-7 rounded-lg bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-500 dark:text-zinc-400 flex items-center justify-center cursor-pointer transition-colors"
               >
-                <X className="w-4 h-4" />
+                <X className="w-3.5 h-3.5" />
               </button>
             </div>
 
-            <div className="w-full h-96 rounded-2xl bg-slate-950 border border-slate-800 overflow-hidden flex items-center justify-center">
+            <div className="w-full h-96 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 overflow-hidden flex items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={inspectImageModal}
@@ -396,19 +396,19 @@ export default function ApprovalsPage() {
               />
             </div>
 
-            <div className="flex justify-end gap-3 pt-2">
+            <div className="flex justify-end gap-2.5 pt-2">
               <a
                 href={inspectImageModal}
                 target="_blank"
                 rel="noreferrer"
-                className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl flex items-center gap-2"
+                className="px-3 py-1.5 bg-zinc-100 hover:bg-zinc-200/80 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 text-xs font-medium rounded-lg flex items-center gap-1.5 transition-colors"
               >
                 <span>Open Raw Image</span>
                 <ExternalLink className="w-3.5 h-3.5" />
               </a>
               <button
                 onClick={() => setInspectImageModal(null)}
-                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl cursor-pointer"
+                className="px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 text-white text-xs font-medium rounded-lg cursor-pointer transition-colors"
               >
                 Done Inspecting
               </button>
@@ -419,39 +419,39 @@ export default function ApprovalsPage() {
 
       {/* APPROVE MODAL */}
       {approveModalApp && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-5">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#111113] border border-zinc-200 dark:border-white/10 rounded-2xl max-w-md w-full p-5 shadow-2xl space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center flex-shrink-0">
-                <UserCheck className="w-5 h-5" />
+              <div className="w-9 h-9 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/40 flex items-center justify-center flex-shrink-0">
+                <UserCheck className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="font-bold text-white text-base">Approve Application</h3>
-                <p className="text-xs text-slate-400">Grant dashboard access to {approveModalApp.fullName}</p>
+                <h3 className="font-semibold text-zinc-900 dark:text-white text-sm">Approve Application</h3>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">Grant dashboard access to {approveModalApp.fullName}</p>
               </div>
             </div>
 
-            <div className="space-y-3">
-              <label className="block text-xs font-medium text-slate-300">Assign Operational Role</label>
+            <div className="space-y-2.5">
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">Assign Operational Role</label>
               <select
                 value={assignedRole}
                 onChange={(e) => setAssignedRole(e.target.value as any)}
-                className="w-full px-3.5 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-indigo-500"
               >
                 <option value="moderator">Community & Housing Moderator</option>
                 <option value="volunteer">City Field Volunteer</option>
                 <option value="content_editor">Content & Local Guide Editor</option>
               </select>
-              <p className="text-[11px] text-slate-500">
-                An automated approval notification will be dispatched to <strong className="text-slate-300">{approveModalApp.email}</strong> via Brevo.
+              <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+                An automated approval notification will be dispatched to <strong className="text-zinc-800 dark:text-zinc-200">{approveModalApp.email}</strong> via Brevo.
               </p>
             </div>
 
-            <div className="flex justify-end gap-3 pt-3 border-t border-slate-800">
+            <div className="flex justify-end gap-2 pt-3 border-t border-zinc-100 dark:border-zinc-800/80">
               <button
                 onClick={() => setApproveModalApp(null)}
                 disabled={actionMutation.isPending}
-                className="px-4 py-2 bg-slate-800 text-slate-300 text-xs font-semibold rounded-xl hover:bg-slate-700 cursor-pointer"
+                className="px-3 py-1.5 bg-zinc-100 hover:bg-zinc-200/80 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 text-xs font-medium rounded-lg cursor-pointer transition-colors"
               >
                 Cancel
               </button>
@@ -464,7 +464,7 @@ export default function ApprovalsPage() {
                   })
                 }
                 disabled={actionMutation.isPending}
-                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-xl flex items-center gap-2 cursor-pointer shadow-lg shadow-emerald-600/30"
+                className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium rounded-lg flex items-center gap-1.5 cursor-pointer shadow-2xs transition-colors"
               >
                 {actionMutation.isPending ? (
                   <>
@@ -482,38 +482,38 @@ export default function ApprovalsPage() {
 
       {/* REJECT MODAL */}
       {rejectModalApp && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-5">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#111113] border border-zinc-200 dark:border-white/10 rounded-2xl max-w-md w-full p-5 shadow-2xl space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-red-500/10 text-red-400 flex items-center justify-center flex-shrink-0">
-                <UserX className="w-5 h-5" />
+              <div className="w-9 h-9 rounded-lg bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-200/60 dark:border-rose-800/40 flex items-center justify-center flex-shrink-0">
+                <UserX className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="font-bold text-white text-base">Reject Application</h3>
-                <p className="text-xs text-slate-400">Deny dashboard privileges for {rejectModalApp.fullName}</p>
+                <h3 className="font-semibold text-zinc-900 dark:text-white text-sm">Reject Application</h3>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">Deny dashboard privileges for {rejectModalApp.fullName}</p>
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="block text-xs font-medium text-slate-300">Reason for Rejection</label>
+              <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">Reason for Rejection</label>
               <textarea
                 rows={3}
                 required
                 placeholder="e.g. Uploaded company ID card is blurred or expired. Please re-register with valid identification."
                 value={rejectionReason}
                 onChange={(e) => setRejectionReason(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-red-500 placeholder-slate-500"
+                className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-rose-500 placeholder-zinc-400"
               />
-              <p className="text-[11px] text-slate-500">
-                This explanation will be emailed to <strong className="text-slate-300">{rejectModalApp.email}</strong> via Brevo.
+              <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+                This explanation will be emailed to <strong className="text-zinc-800 dark:text-zinc-200">{rejectModalApp.email}</strong> via Brevo.
               </p>
             </div>
 
-            <div className="flex justify-end gap-3 pt-3 border-t border-slate-800">
+            <div className="flex justify-end gap-2 pt-3 border-t border-zinc-100 dark:border-zinc-800/80">
               <button
                 onClick={() => setRejectModalApp(null)}
                 disabled={actionMutation.isPending}
-                className="px-4 py-2 bg-slate-800 text-slate-300 text-xs font-semibold rounded-xl hover:bg-slate-700 cursor-pointer"
+                className="px-3 py-1.5 bg-zinc-100 hover:bg-zinc-200/80 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 text-xs font-medium rounded-lg cursor-pointer transition-colors"
               >
                 Cancel
               </button>
@@ -526,7 +526,7 @@ export default function ApprovalsPage() {
                   })
                 }
                 disabled={actionMutation.isPending || !rejectionReason.trim()}
-                className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white text-xs font-semibold rounded-xl flex items-center gap-2 cursor-pointer shadow-lg shadow-red-600/30 disabled:opacity-50"
+                className="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-500 text-white text-xs font-medium rounded-lg flex items-center gap-1.5 cursor-pointer shadow-2xs transition-colors disabled:opacity-50"
               >
                 {actionMutation.isPending ? (
                   <>
