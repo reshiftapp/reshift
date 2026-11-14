@@ -2,17 +2,38 @@
 
 import { revalidatePath } from 'next/cache'
 import { supabaseAdmin } from '@/lib/supabase/admin'
+import { createClient } from '@/lib/supabase/server'
 import { Database } from '@/types/database.types'
 
 type PropertyInsert = Database['public']['Tables']['properties']['Insert']
 type PropertyUpdate = Database['public']['Tables']['properties']['Update']
 
+async function checkIsSuperAdmin(): Promise<boolean> {
+  try {
+    const supabase = await createClient()
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+    if (!user) return false
+    return user.email === 'reshiftapp@gmail.com' || user.user_metadata?.role === 'super_admin'
+  } catch {
+    return false
+  }
+}
+
 export async function createProperty(data: PropertyInsert) {
   try {
+    const isSuperAdmin = await checkIsSuperAdmin()
+    const safeData = { ...data }
+    // Staff listings: monthly rent is strictly reserved for Super Admin determination
+    if (!isSuperAdmin) {
+      safeData.monthly_rent = 0
+    }
+
     const { data: created, error } = await supabaseAdmin
       .from('properties')
       .insert({
-        ...data,
+        ...safeData,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })
@@ -30,10 +51,17 @@ export async function createProperty(data: PropertyInsert) {
 
 export async function updateProperty(id: string, data: PropertyUpdate) {
   try {
+    const isSuperAdmin = await checkIsSuperAdmin()
+    const safeData = { ...data }
+    // Enforce pricing lock: only Super Admin can alter monthly_rent
+    if (!isSuperAdmin) {
+      delete safeData.monthly_rent
+    }
+
     const { error } = await supabaseAdmin
       .from('properties')
       .update({
-        ...data,
+        ...safeData,
         updated_at: new Date().toISOString(),
       })
       .eq('id', id)

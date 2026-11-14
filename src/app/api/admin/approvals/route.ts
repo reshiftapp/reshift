@@ -1,11 +1,30 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
+import { createClient } from '@/lib/supabase/server'
 import { sendApprovalEmail, sendRejectionEmail } from '@/lib/email/brevo'
 
 export const dynamic = 'force-dynamic'
 
+async function verifySuperAdmin() {
+  try {
+    const supabase = await createClient()
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+    if (!user) return false
+    return user.email === 'reshiftapp@gmail.com' || user.user_metadata?.role === 'super_admin'
+  } catch {
+    return false
+  }
+}
+
 export async function GET() {
   try {
+    const isAuthorized = await verifySuperAdmin()
+    if (!isAuthorized) {
+      return NextResponse.json({ success: false, message: 'Forbidden. Super Admin privilege required.' }, { status: 403 })
+    }
+
     const { data: userList, error } = await supabaseAdmin.auth.admin.listUsers({ perPage: 100 })
 
     if (error) {
@@ -54,6 +73,11 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const isAuthorized = await verifySuperAdmin()
+    if (!isAuthorized) {
+      return NextResponse.json({ success: false, message: 'Forbidden. Super Admin privilege required.' }, { status: 403 })
+    }
+
     const { action, userId, assignedRole, reason } = await request.json()
 
     if (!userId || !action) {

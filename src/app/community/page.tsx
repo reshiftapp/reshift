@@ -43,11 +43,11 @@ export default async function CommunityPage() {
     <div className="space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-black text-white tracking-tight flex items-center gap-2.5">
-          <MessageSquare className="w-6 h-6 text-[#5B6FD0]" />
+        <h1 className="text-2xl font-semibold text-zinc-900 dark:text-white tracking-tight flex items-center gap-2">
+          <MessageSquare className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
           <span>Community Moderation Center</span>
         </h1>
-        <p className="text-xs text-slate-400 mt-1">
+        <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
           Monitor and moderate discussions, pin announcements, relocate misplaced posts, and configure active categories.
         </p>
       </div>

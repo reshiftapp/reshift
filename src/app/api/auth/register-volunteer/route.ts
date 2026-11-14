@@ -97,16 +97,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: createAuthError?.message || 'Failed to register account.' }, { status: 500 })
     }
 
-    // 9. Sync profile to public.profiles table
-    const profilePayload: any = {
-      id: newUser.user.id,
-      email: normalizedEmail,
-      full_name: fullName.trim(),
-      role: 'Working Professional', // Persona compliant with mobile DB check constraint
-      city: city || 'Kochi',
-    }
-
-    await supabaseAdmin.from('profiles').upsert(profilePayload, { onConflict: 'id' })
+    // Staff accounts remain quarantined in Supabase Auth user_metadata (is_staff: true, approval_status: 'pending')
+    // and do NOT pollute the Flutter mobile app customer profiles table.
 
     return NextResponse.json({
       success: true,

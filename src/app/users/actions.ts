@@ -5,25 +5,29 @@ import { supabaseAdmin } from '@/lib/supabase/admin'
 
 export async function updateUserSuspension(userId: string, isSuspended: boolean, reason?: string) {
   try {
-    // Permanent Protection: Verify target is not the Super Admin
-    const { data: targetProfile } = await supabaseAdmin
-      .from('profiles')
-      .select('email, moderator_role')
-      .eq('id', userId)
-      .single()
+    const { data: userRecord, error: fetchErr } = await supabaseAdmin.auth.admin.getUserById(userId)
+    if (fetchErr || !userRecord?.user) {
+      return { success: false, error: 'User account not found.' }
+    }
 
-    if (targetProfile?.email === 'reshiftapp@gmail.com' || targetProfile?.moderator_role === 'super_admin') {
+    const user = userRecord.user
+    const meta = user.user_metadata || {}
+
+    // Permanent Protection: Verify target is not the Super Admin
+    if (user.email === 'reshiftapp@gmail.com' || meta.role === 'super_admin') {
       return { success: false, error: 'Super Admin privileges are permanent and cannot be suspended or revoked.' }
     }
 
-    const { error } = await supabaseAdmin
-      .from('profiles')
-      .update({
+    // Ban duration: '876600h' (~100 years) to ban, or 'none' to unban
+    const { error } = await supabaseAdmin.auth.admin.updateUserById(userId, {
+      ban_duration: isSuspended ? '876600h' : 'none',
+      user_metadata: {
+        ...meta,
         is_suspended: isSuspended,
         suspension_reason: isSuspended ? (reason || 'Violated community guidelines') : null,
         suspended_at: isSuspended ? new Date().toISOString() : null,
-      })
-      .eq('id', userId)
+      },
+    })
 
     if (error) throw error
     revalidatePath('/users')
@@ -36,21 +40,25 @@ export async function updateUserSuspension(userId: string, isSuspended: boolean,
 
 export async function updateModeratorRole(userId: string, role: 'content_editor' | 'moderator' | 'super_admin' | null) {
   try {
-    // Permanent Protection: Verify target is not the Super Admin
-    const { data: targetProfile } = await supabaseAdmin
-      .from('profiles')
-      .select('email, moderator_role')
-      .eq('id', userId)
-      .single()
+    const { data: userRecord, error: fetchErr } = await supabaseAdmin.auth.admin.getUserById(userId)
+    if (fetchErr || !userRecord?.user) {
+      return { success: false, error: 'User account not found.' }
+    }
 
-    if (targetProfile?.email === 'reshiftapp@gmail.com' || targetProfile?.moderator_role === 'super_admin') {
+    const user = userRecord.user
+    const meta = user.user_metadata || {}
+
+    // Permanent Protection: Verify target is not the Super Admin
+    if (user.email === 'reshiftapp@gmail.com' || meta.role === 'super_admin') {
       return { success: false, error: 'Super Admin access is permanent and cannot be modified or revoked.' }
     }
 
-    const { error } = await supabaseAdmin
-      .from('profiles')
-      .update({ moderator_role: role })
-      .eq('id', userId)
+    const { error } = await supabaseAdmin.auth.admin.updateUserById(userId, {
+      user_metadata: {
+        ...meta,
+        role: role,
+      },
+    })
 
     if (error) throw error
     revalidatePath('/users')

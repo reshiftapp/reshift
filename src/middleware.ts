@@ -101,7 +101,23 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // 6. If logged-in authorized staff/admin tries to visit /login or /register, redirect to dashboard
+  // 6. Strict Super Admin Route Protection
+  const SUPER_ADMIN_ONLY_PREFIXES = ['/approvals', '/settings', '/audit-log', '/api/admin']
+  const isSuperAdminRoute = SUPER_ADMIN_ONLY_PREFIXES.some(
+    (prefix) => pathname === prefix || pathname.startsWith(prefix + '/')
+  )
+
+  if (isSuperAdminRoute && !isSuperAdmin) {
+    if (pathname.startsWith('/api/')) {
+      return NextResponse.json(
+        { success: false, message: 'Forbidden. Super Admin access required.' },
+        { status: 403 }
+      )
+    }
+    return NextResponse.redirect(new URL('/', request.url))
+  }
+
+  // 7. If logged-in authorized staff/admin tries to visit /login or /register, redirect to dashboard
   if (isPublicPage && (isSuperAdmin || isApprovedStaff)) {
     return NextResponse.redirect(new URL('/', request.url))
   }

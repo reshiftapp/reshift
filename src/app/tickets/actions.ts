@@ -5,12 +5,10 @@ import { supabaseAdmin } from '@/lib/supabase/admin'
 
 export async function updateTicketStatus(id: string, status: string) {
   try {
-    const isResolved = status === 'Resolved' || status === 'Closed'
     const { error } = await supabaseAdmin
       .from('support_tickets')
       .update({
         status,
-        resolved_at: isResolved ? new Date().toISOString() : null,
       })
       .eq('id', id)
 
