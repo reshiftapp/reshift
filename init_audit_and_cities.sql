@@ -1,5 +1,5 @@
 -- ============================================================================
--- RESHIFT ESSENTIAL SYSTEM TABLES MIGRATION
+-- RESHIFT EXTENDED SYSTEM TABLES MIGRATION
 -- Execute in Supabase SQL Editor:
 -- https://supabase.com/dashboard/project/yvrbxfazgnjiallojyqp/sql/new
 -- ============================================================================
@@ -31,6 +31,7 @@ CREATE POLICY "Service role full access on audit log" ON public.moderator_audit_
 DROP POLICY IF EXISTS "Authenticated users view audit log" ON public.moderator_audit_log;
 CREATE POLICY "Authenticated users view audit log" ON public.moderator_audit_log
   FOR SELECT TO authenticated USING (true);
+
 
 -- 2. OPERATIONAL CITIES TABLE
 CREATE TABLE IF NOT EXISTS public.cities (
@@ -72,3 +73,81 @@ ON CONFLICT (name) DO UPDATE SET
   state = EXCLUDED.state,
   latitude = EXCLUDED.latitude,
   longitude = EXCLUDED.longitude;
+
+
+-- 3. PUSH NOTIFICATIONS TABLE
+CREATE TABLE IF NOT EXISTS public.push_notifications (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  title text NOT NULL,
+  body text NOT NULL,
+  target_city text[] NOT NULL DEFAULT '{}',
+  target_audience text NOT NULL DEFAULT 'all',
+  notification_type text NOT NULL DEFAULT 'Announcement',
+  image_url text,
+  deep_link text,
+  scheduled_at timestamptz,
+  sent_at timestamptz,
+  sent_by uuid REFERENCES auth.users(id),
+  delivery_count integer DEFAULT 0,
+  status text NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'scheduled', 'sending', 'sent', 'failed')),
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+ALTER TABLE public.push_notifications ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Service role full access on push_notifications" ON public.push_notifications;
+CREATE POLICY "Service role full access on push_notifications" ON public.push_notifications
+  FOR ALL TO service_role USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Authenticated users view push_notifications" ON public.push_notifications;
+CREATE POLICY "Authenticated users view push_notifications" ON public.push_notifications
+  FOR SELECT TO authenticated USING (true);
+
+
+-- 4. EXPLORE CARDS TABLE
+CREATE TABLE IF NOT EXISTS public.explore_cards (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  city text NOT NULL,
+  title text NOT NULL,
+  subtitle text NOT NULL,
+  image_url text,
+  action_route text NOT NULL DEFAULT '/explore',
+  sort_order smallint NOT NULL DEFAULT 0,
+  is_active boolean NOT NULL DEFAULT true,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+
+ALTER TABLE public.explore_cards ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Public can view active explore cards" ON public.explore_cards;
+CREATE POLICY "Public can view active explore cards" ON public.explore_cards
+  FOR SELECT USING (is_active = true);
+
+DROP POLICY IF EXISTS "Service role full access on explore cards" ON public.explore_cards;
+CREATE POLICY "Service role full access on explore cards" ON public.explore_cards
+  FOR ALL TO service_role USING (true) WITH CHECK (true);
+
+
+-- 5. APP BANNERS (SPLASH & ONBOARDING)
+CREATE TABLE IF NOT EXISTS public.app_banners (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  placement text NOT NULL CHECK (placement IN ('splash', 'onboarding_1', 'onboarding_2', 'onboarding_3', 'home_popup')),
+  image_url text NOT NULL,
+  title text,
+  subtitle text,
+  action_url text,
+  is_active boolean NOT NULL DEFAULT true,
+  sort_order smallint NOT NULL DEFAULT 0,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+ALTER TABLE public.app_banners ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Public can view active app banners" ON public.app_banners;
+CREATE POLICY "Public can view active app banners" ON public.app_banners
+  FOR SELECT USING (is_active = true);
+
+DROP POLICY IF EXISTS "Service role full access on app banners" ON public.app_banners;
+CREATE POLICY "Service role full access on app banners" ON public.app_banners
+  FOR ALL TO service_role USING (true) WITH CHECK (true);
