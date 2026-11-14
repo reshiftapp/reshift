@@ -47,8 +47,11 @@ export default async function DashboardPage() {
   const { data: rawFoodSpots } = await supabaseAdmin.from('food_spots').select('*')
   const foodSpots = (rawFoodSpots || []) as FoodSpotRow[]
 
+  // Filter customer profiles (excluding Super Admin root account)
+  const customerProfiles = profiles.filter((p) => p.email !== 'reshiftapp@gmail.com')
+
   // Compute KPI counts from real live database rows
-  const totalUsers = profiles.length
+  const totalUsers = customerProfiles.length
   const activeProperties = properties.filter((p) => p.is_active).length
   const totalPosts = posts.length
   const openTickets = tickets.filter((t) => t.status === 'Open').length
@@ -61,7 +64,7 @@ export default async function DashboardPage() {
 
   // User registration trend over time (aggregated daily)
   const regMap: Record<string, number> = {}
-  profiles.forEach((u) => {
+  customerProfiles.forEach((u) => {
     if (u.created_at) {
       const d = u.created_at.slice(0, 10)
       regMap[d] = (regMap[d] || 0) + 1
@@ -82,9 +85,9 @@ export default async function DashboardPage() {
     count,
   }))
 
-  // User demographic roles breakdown
+  // User demographic roles breakdown (registered app customers only)
   const roleMap: Record<string, number> = {}
-  profiles.forEach((u) => {
+  customerProfiles.forEach((u) => {
     const r = u.role || 'Unspecified'
     roleMap[r] = (roleMap[r] || 0) + 1
   })

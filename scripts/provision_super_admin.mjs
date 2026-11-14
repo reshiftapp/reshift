@@ -31,13 +31,13 @@ async function main() {
     }
   })
 
-  console.log('3. Upserting into public.profiles with valid role Working Professional...')
+  console.log('3. Upserting into public.profiles for Super Admin...')
   const profileData = {
     id: adminUser.id,
     email: 'reshiftapp@gmail.com',
     full_name: 'ReShift Super Admin',
-    role: 'Working Professional',
-    city: 'Kochi'
+    role: 'Other',
+    city: 'All'
   }
 
   const { data, error } = await supabase.from('profiles').upsert(profileData, { onConflict: 'id' }).select()

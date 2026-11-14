@@ -15,6 +15,7 @@ export default async function UsersPage() {
     .order('created_at', { ascending: false })
 
   const users = (rawProfiles || []) as ProfileRow[]
+  const customerCount = users.filter((u) => u.email !== 'reshiftapp@gmail.com').length
 
   return (
     <div className="space-y-6">
@@ -26,7 +27,7 @@ export default async function UsersPage() {
             <span>App Customers & Registered Residents</span>
           </h1>
           <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
-            Registered customers from the Flutter mobile app ({users.length} residents). Customers browse and apply for properties listed by our staff.
+            Registered customers from the Flutter mobile app ({customerCount} residents). Customers browse and apply for properties listed by our staff.
           </p>
         </div>
       </div>

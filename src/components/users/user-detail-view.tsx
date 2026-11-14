@@ -30,7 +30,8 @@ import {
   MapPin,
   Mail,
   User,
-  AlertCircle
+  AlertCircle,
+  Lock
 } from 'lucide-react'
 
 type ProfileRow = Database['public']['Tables']['profiles']['Row']
@@ -126,7 +127,9 @@ export function UserDetailView({
     })
   }
 
-  const initials = (user.full_name || user.email).slice(0, 2).toUpperCase()
+  const isSuperAdminUser = user.email === 'reshiftapp@gmail.com' || user.moderator_role === 'super_admin'
+  const initials = isSuperAdminUser ? 'RA' : (user.full_name || user.email).slice(0, 2).toUpperCase()
+  const displayName = isSuperAdminUser ? 'ReShift Super Admin' : (user.full_name || 'Anonymous User')
 
   return (
     <div className="space-y-6">
@@ -134,13 +137,13 @@ export function UserDetailView({
       <div className="flex items-center gap-3">
         <Link
           href="/users"
-          className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-colors"
+          className="p-2 rounded-xl bg-white dark:bg-[#111113] border border-zinc-200 dark:border-white/10 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
         </Link>
         <div>
-          <h1 className="text-xl font-bold text-white tracking-tight">User Profile & Activity Dossier</h1>
-          <p className="text-xs text-slate-400">ID: {user.id}</p>
+          <h1 className="text-xl font-bold text-zinc-900 dark:text-white tracking-tight">User Profile & Activity Dossier</h1>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400">ID: {user.id}</p>
         </div>
       </div>
 
@@ -149,111 +152,144 @@ export function UserDetailView({
         <div
           className={`p-3.5 rounded-xl border text-xs font-medium flex items-center justify-between ${
             feedback.type === 'success'
-              ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
-              : 'bg-rose-500/10 border-rose-500/20 text-rose-400'
+              ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200/60 dark:border-emerald-800/40 text-emerald-700 dark:text-emerald-400'
+              : 'bg-rose-50 dark:bg-rose-950/40 border-rose-200/60 dark:border-rose-800/40 text-rose-700 dark:text-rose-400'
           }`}
         >
           <span>{feedback.message}</span>
-          <button onClick={() => setFeedback(null)} className="text-slate-400 hover:text-white">
+          <button onClick={() => setFeedback(null)} className="text-zinc-400 hover:text-zinc-700 dark:hover:text-white">
             ✕
           </button>
         </div>
       )}
 
       {/* Profile Overview Card */}
-      <div className="rounded-2xl bg-slate-900/90 border border-slate-800 p-6 shadow-xl shadow-black/20">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-6 border-b border-slate-800">
+      <div className="rounded-xl bg-white dark:bg-[#111113] border border-zinc-200 dark:border-white/10 p-5 shadow-2xs">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-5 border-b border-zinc-100 dark:border-zinc-800/80">
           <div className="flex items-center gap-4">
             {user.avatar_url ? (
               <img
                 src={user.avatar_url}
                 alt=""
-                className="w-16 h-16 rounded-2xl object-cover border-2 border-[#5B6FD0]"
+                className="w-14 h-14 rounded-xl object-cover border border-zinc-200 dark:border-zinc-800"
               />
             ) : (
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#5B6FD0] to-indigo-500 text-white font-extrabold text-xl flex items-center justify-center shadow-lg shadow-indigo-600/20">
+              <div className={`w-14 h-14 rounded-xl font-extrabold text-lg flex items-center justify-center shadow-2xs ${
+                isSuperAdminUser
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900'
+              }`}>
                 {initials}
               </div>
             )}
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-xl font-extrabold text-white">{user.full_name || 'Anonymous User'}</h2>
-                {user.is_suspended && (
-                  <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30 uppercase">
+                <h2 className="text-lg font-bold text-zinc-900 dark:text-white">{displayName}</h2>
+                {isSuperAdminUser && (
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-200/60 dark:border-indigo-800/40">
+                    <ShieldCheck className="w-3 h-3" /> Super Admin
+                  </span>
+                )}
+                {user.is_suspended && !isSuperAdminUser && (
+                  <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-200/60 dark:border-rose-800/40 uppercase">
                     Suspended
                   </span>
                 )}
               </div>
-              <p className="text-xs text-slate-400 font-mono mt-0.5">{user.email}</p>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 font-mono mt-0.5">{user.email}</p>
               <div className="flex flex-wrap items-center gap-2 mt-2">
-                <span className="px-2.5 py-0.5 rounded-md bg-slate-800 text-slate-300 text-[11px] font-medium border border-slate-700">
-                  {user.role || 'Other'}
+                {isSuperAdminUser ? (
+                  <span className="px-2.5 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 text-[11px] font-semibold border border-indigo-200/60 dark:border-indigo-800/40">
+                    Root Governance
+                  </span>
+                ) : (
+                  <span className="px-2.5 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800/80 text-zinc-600 dark:text-zinc-400 text-[11px] font-medium border border-zinc-200/60 dark:border-zinc-700/60">
+                    {user.role || 'Other'}
+                  </span>
+                )}
+                <span className="px-2.5 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800/80 text-zinc-600 dark:text-zinc-400 text-[11px] font-medium border border-zinc-200/60 dark:border-zinc-700/60 flex items-center gap-1">
+                  <MapPin className="w-3 h-3 text-indigo-600 dark:text-indigo-400" /> {isSuperAdminUser ? 'All (Global)' : (user.city || 'No City Set')}
                 </span>
-                <span className="px-2.5 py-0.5 rounded-md bg-slate-800 text-slate-300 text-[11px] font-medium border border-slate-700 flex items-center gap-1">
-                  <MapPin className="w-3 h-3 text-[#5B6FD0]" /> {user.city || 'No City Set'}
-                </span>
-                <span className="text-[11px] text-slate-500">Joined {formatDate(user.created_at)}</span>
+                <span className="text-[11px] text-zinc-400 dark:text-zinc-500">Joined {formatDate(user.created_at)}</span>
               </div>
             </div>
           </div>
 
           {/* Action Toolbar */}
-          <div className="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
-            {/* Password Reset */}
-            <button
-              onClick={handlePasswordReset}
-              disabled={isPending}
-              className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors flex items-center gap-1.5"
-            >
-              <KeyRound className="w-3.5 h-3.5 text-indigo-400" />
-              <span>Reset Password</span>
-            </button>
-
-            {/* Suspend / Unsuspend */}
-            {user.is_suspended ? (
-              <button
-                onClick={() => handleToggleSuspension(false)}
-                disabled={isPending}
-                className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition-colors flex items-center gap-1.5 shadow-md shadow-emerald-600/20"
-              >
-                <UserCheck className="w-3.5 h-3.5" />
-                <span>Reactivate User</span>
-              </button>
+          <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+            {isSuperAdminUser ? (
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/60 dark:border-emerald-800/40 text-emerald-700 dark:text-emerald-400 text-xs font-semibold select-none">
+                <Lock className="w-3.5 h-3.5" />
+                <span>Permanent Super Admin (Immutable Root)</span>
+              </div>
             ) : (
-              <button
-                onClick={() => setSuspensionModalOpen(true)}
-                disabled={isPending}
-                className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-rose-600 hover:bg-rose-500 text-white transition-colors flex items-center gap-1.5 shadow-md shadow-rose-600/20"
-              >
-                <UserX className="w-3.5 h-3.5" />
-                <span>Suspend Account</span>
-              </button>
-            )}
+              <>
+                {/* Password Reset */}
+                <button
+                  onClick={handlePasswordReset}
+                  disabled={isPending}
+                  className="px-3 py-1.5 rounded-lg text-xs font-medium bg-zinc-100 hover:bg-zinc-200/80 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 border border-zinc-200/80 dark:border-zinc-700 transition-colors flex items-center gap-1.5"
+                >
+                  <KeyRound className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                  <span>Reset Password</span>
+                </button>
 
-            {/* Moderator Role Selector */}
-            <select
-              value={user.moderator_role || ''}
-              onChange={(e) => handleRoleChange(e.target.value || null)}
-              disabled={isPending}
-              className="px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-300 focus:outline-none focus:border-[#5B6FD0]"
-            >
-              <option value="">Standard User</option>
-              <option value="content_editor">Content Editor</option>
-              <option value="moderator">Moderator</option>
-              <option value="super_admin">Super Admin</option>
-            </select>
+                {/* Suspend / Unsuspend */}
+                {user.is_suspended ? (
+                  <button
+                    onClick={() => handleToggleSuspension(false)}
+                    disabled={isPending}
+                    className="px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-600 hover:bg-emerald-500 text-white transition-colors flex items-center gap-1.5 shadow-2xs"
+                  >
+                    <UserCheck className="w-3.5 h-3.5" />
+                    <span>Reactivate User</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setSuspensionModalOpen(true)}
+                    disabled={isPending}
+                    className="px-3 py-1.5 rounded-lg text-xs font-medium bg-rose-600 hover:bg-rose-500 text-white transition-colors flex items-center gap-1.5 shadow-2xs"
+                  >
+                    <UserX className="w-3.5 h-3.5" />
+                    <span>Suspend Account</span>
+                  </button>
+                )}
+
+                {/* Moderator Role Selector */}
+                <select
+                  value={user.moderator_role || ''}
+                  onChange={(e) => handleRoleChange(e.target.value || null)}
+                  disabled={isPending}
+                  className="px-3 py-1.5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-xs text-zinc-700 dark:text-zinc-300 focus:outline-none focus:border-indigo-500"
+                >
+                  <option value="">Standard User</option>
+                  <option value="content_editor">Content Editor</option>
+                  <option value="moderator">Moderator</option>
+                </select>
+              </>
+            )}
           </div>
         </div>
 
-        {/* Suspension Reason Banner if Suspended */}
-        {user.is_suspended && (
-          <div className="mt-4 p-3.5 rounded-xl bg-rose-950/40 border border-rose-900/60 text-xs text-rose-300 flex items-start gap-2.5">
-            <AlertCircle className="w-4 h-4 text-rose-400 flex-shrink-0 mt-0.5" />
+        {/* Super Admin Protection Banner */}
+        {isSuperAdminUser && (
+          <div className="mt-4 p-3.5 rounded-xl bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-200/60 dark:border-indigo-800/40 text-xs text-indigo-800 dark:text-indigo-300 flex items-start gap-2.5">
+            <ShieldCheck className="w-4 h-4 text-indigo-600 dark:text-indigo-400 flex-shrink-0 mt-0.5" />
             <div>
-              <span className="font-semibold text-rose-200">Suspension Notice:</span>{' '}
+              <span className="font-semibold">Super Administrator Access Lock:</span> This is the primary root administrative account for ReShift. System access, ownership, and governance privileges are permanent and cannot be revoked, suspended, or modified by any user or moderator.
+            </div>
+          </div>
+        )}
+
+        {/* Suspension Reason Banner if Suspended */}
+        {user.is_suspended && !isSuperAdminUser && (
+          <div className="mt-4 p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200/60 dark:border-rose-900/60 text-xs text-rose-700 dark:text-rose-300 flex items-start gap-2.5">
+            <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 flex-shrink-0 mt-0.5" />
+            <div>
+              <span className="font-semibold">Suspension Notice:</span>{' '}
               {user.suspension_reason || 'No specific reason entered.'}
               {user.suspended_at && (
-                <span className="block text-[11px] text-rose-400/80 mt-0.5">
+                <span className="block text-[11px] text-rose-500 dark:text-rose-400/80 mt-0.5">
                   Applied on {formatDate(user.suspended_at)}
                 </span>
               )}

@@ -5,6 +5,17 @@ import { supabaseAdmin } from '@/lib/supabase/admin'
 
 export async function updateUserSuspension(userId: string, isSuspended: boolean, reason?: string) {
   try {
+    // Permanent Protection: Verify target is not the Super Admin
+    const { data: targetProfile } = await supabaseAdmin
+      .from('profiles')
+      .select('email, moderator_role')
+      .eq('id', userId)
+      .single()
+
+    if (targetProfile?.email === 'reshiftapp@gmail.com' || targetProfile?.moderator_role === 'super_admin') {
+      return { success: false, error: 'Super Admin privileges are permanent and cannot be suspended or revoked.' }
+    }
+
     const { error } = await supabaseAdmin
       .from('profiles')
       .update({
@@ -25,6 +36,17 @@ export async function updateUserSuspension(userId: string, isSuspended: boolean,
 
 export async function updateModeratorRole(userId: string, role: 'content_editor' | 'moderator' | 'super_admin' | null) {
   try {
+    // Permanent Protection: Verify target is not the Super Admin
+    const { data: targetProfile } = await supabaseAdmin
+      .from('profiles')
+      .select('email, moderator_role')
+      .eq('id', userId)
+      .single()
+
+    if (targetProfile?.email === 'reshiftapp@gmail.com' || targetProfile?.moderator_role === 'super_admin') {
+      return { success: false, error: 'Super Admin access is permanent and cannot be modified or revoked.' }
+    }
+
     const { error } = await supabaseAdmin
       .from('profiles')
       .update({ moderator_role: role })
