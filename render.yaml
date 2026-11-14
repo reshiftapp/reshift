@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: reshift-moderator
+    runtime: node
+    plan: free
+    region: oregon # or singapore / frankfurt
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: NEXT_PUBLIC_APP_NAME
+        value: "Reshift Moderator Control Panel"
+      - key: BREVO_SENDER_EMAIL
+        value: "reshiftapp@gmail.com"
+      - key: BREVO_SENDER_NAME
+        value: "ReShift Team"
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        sync: false
+      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: BREVO_API_KEY
+        sync: false
